@@ -26,8 +26,9 @@ void DpkgModelData::runScript() {
     QProcess process;
     process.start("dpkg-status"); // Call the installed Python script
     if (!process.waitForFinished()) {
+        QString errorOutput = process.readAllStandardError();
         qWarning() << "Failed to run script: " << process.errorString();
-        return;
+        qWarning() << "Standard error output: " << errorOutput;
     }
 
     // Notify the view that the data is about to change
