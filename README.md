@@ -14,7 +14,7 @@
     ```
     - Run the Script: You can now run the script without the .py extension:
     ```bash
-    dpkg_status
+    dpkg_status.py
     ```
 ---
 
@@ -304,7 +304,7 @@ The script determines whether a package is explicitly installed by analyzing key
     ```
     - Run the Script: You can now run the script without the .py extension:
     ```bash
-    dpkg_status
+    dpkg_status.py
     ```
     
 7. **Install the `.deb` Package by cloning repo**
@@ -323,11 +323,11 @@ The script determines whether a package is explicitly installed by analyzing key
    - Run the Script
      - Confirm the script is installed in /usr/bin:
      ```bash
-      ls /usr/bin/dpkg_status
+      ls /usr/bin/dpkg_status.py
      ```
    - Run the script directly:
      ```bash
-      dpkg_status
+      dpkg_status.py
      ```
      
 ## **Debugging Installation Issues** 
@@ -339,10 +339,10 @@ The script determines whether a package is explicitly installed by analyzing key
     ```
   - Verify the Installation: Check if the script is now installed without the .py extension:
     ```bash
-    ls /usr/bin/dpkg_status
+    ls /usr/bin/dpkg_status.py
     ```
   - If the output shows /usr/bin/dpkg_status, the script has been successfully renamed. 
   - Run the Script: You can now run the script without the .py extension:
     ```bash
-    dpkg_status
+    dpkg_status.py
     ```

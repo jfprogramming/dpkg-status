@@ -65,7 +65,7 @@ class TestDpkgStatusParser(unittest.TestCase):
         auto_installed_packages = {"package1", "package3"}
 
         with patch("builtins.open", mock_open(read_data=mock_dpkg_status)):
-            explicitly_installed = parse_dpkg_status("/fake/path/dpkg_status", auto_installed_packages)
+            explicitly_installed = parse_dpkg_status("/fake/path/dpkg_status.py", auto_installed_packages)
             print(f"explicitly_install: {explicitly_installed}")
 
             # Verify explicitly installed packages
