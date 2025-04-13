@@ -1,6 +1,14 @@
+dpkg-status (1.2) unstable; urgency=medium
+
+  * Incorporated latest bug fixes and improvements.
+  * Updated logging functionality for debugging output.
+  * Improved comments and cleaned up code structure.
+
+ -- Jesse Finneman <jfprogramming@yahoo.com>  Sun, 13 Apr 2025 22:11:14 -0600
+
 dpkg-status (1.1) unstable; urgency=medium
 
-  * Initial release.
+  * Updaet with latest changes.
 
  -- Jesse Finneman <jfprogramming@yahoo.com>  Sun, 13 Apr 2025 00:27:21 -0600
 

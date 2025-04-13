@@ -1,1 +1,1 @@
-src/dpkg_status usr/bin/
+src/dpkg_status.py usr/bin/

@@ -62,7 +62,7 @@ Before running the script, ensure your system meets the following requirements:
      
 4. Running  
    - ```bash
-     ./main.py 
+     ./dpkg_status.py 
 
 ## Detection Algorithm:
 The script determines whether a package is explicitly installed by analyzing key package management files and metadata. It excludes auto-installed packages (dependencies installed as part of another package) and focuses on packages explicitly installed by the user. The process involves the following steps:
@@ -226,19 +226,21 @@ The script determines whether a package is explicitly installed by analyzing key
   - Debian packages have a specific directory structure. Organize your project like this:
 
     ```plaintext
-    dpkg-status/               # Root directory of your project
-    ├── debian/                # Contains files needed for building the package
-    │   ├── control            # Metadata about the package
-    │   ├── changelog          # Change history for the package
-    │   ├── copyright          # Licensing information
-    │   ├── rules              # Instructions for building the package
-    │   ├── install            # Files to be installed and their destinations
-    │   ├── compat             # Debhelper compatibility level
-    ├── src/                   # Your Python source code
-    │   ├── dpkg_status.py     # Your main script
-    │   ├── other_files.py     # Any other Python files
-    ├── README.md              # Project documentation
-    ├── setup.py               # Python packaging file (optional, if needed)
+    dpkg-status/                    # Root directory of your project
+    ├── debian/                     # Contains files needed for building the package
+    │   ├── control                 # Metadata about the package
+    │   ├── changelog               # Change history for the package
+    │   ├── copyright               # Licensing information
+    │   ├── rules                   # Instructions for building the package
+    │   ├── install                 # Files to be installed and their destinations
+    │   ├── compat                  # Debhelper compatibility level
+    ├── src/                        # Python source code
+    │   ├── dpkg_status.py          # Main program script
+    ├── tests/                      # Python Unit Tests source code
+    │   ├── test_dpkg_status.py     # Unit test script
+    ├── releases/                   # Release folder
+    │   ├── dpkg-status_1.1_all.deb # Custom built deb package containing python script
+    ├── README.md                   # Project documentation
     ```
 2. **Create the debian/ Directory**
   - This directory contains all the files required to build a Debian package.
@@ -297,6 +299,12 @@ The script determines whether a package is explicitly installed by analyzing key
     - ```bash 
       debuild -us -uc
       ```
+      
+  - verify deb package built 
+    - ```bash 
+      lintian ../dpkg-status_1.1_all.deb
+      ``` 
+      
   - Clean and rebuild 
     - ```bash
       fakeroot debian/rules clean
@@ -320,7 +328,7 @@ The script determines whether a package is explicitly installed by analyzing key
     ```bash
     sudo dpkg -i dpkg-status_1.1_all.deb
     ```
-    - Run the Script: You can now run the script without the .py extension:
+    - Run the Script: You can now run the script with:
     ```bash
     dpkg_status.py
     ```
@@ -357,7 +365,7 @@ The script determines whether a package is explicitly installed by analyzing key
       sudo dpkg -r dpkg-status
       sudo dpkg -i dpkg-status_1.1_all.deb
     ```
-  - Verify the Installation: Check if the script is now installed without the .py extension:
+  - Verify the Installation: Check if the script is now installed:
     ```bash
     ls /usr/bin/dpkg_status.py
     ```
