@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import os
+import argparse
+import logging
 
 """
 dpkg-status Parser Script
@@ -26,6 +28,11 @@ Author:
 Jesse Finn
 """
 
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 def parse_manual_packages(extended_states_path):
     """
     Parses the extended_states file to build a set of packages explicitly installed by the user.
@@ -34,22 +41,21 @@ def parse_manual_packages(extended_states_path):
     """
     manual_packages_set = set()
     try:
-        if os.path.exists(extended_states_path):
-            with open(extended_states_path, 'r') as extended_file:
+        if os.path.exists(extended_states_path) and os.access(extended_states_path, os.R_OK):
+            with open(extended_states_path, 'r', encoding='utf-8') as extended_file:
                 package_name = None
                 for line in extended_file:
                     if line.startswith("Package:"):
                         package_name = line.split(":")[1].strip()
                     elif line.startswith("Manual:") and "yes" in line and package_name:
                         manual_packages_set.add(package_name)
-                    else:
-                        print(f"parse_manual_packages package_name: {package_name}")
-                        print(f"line: {line}")
+        else:
+            logger.error(f"Cannot access file: {extended_states_path}")
         return manual_packages_set
-    # Error handling
     except FileNotFoundError:
-        print(f"Error: {extended_states_path} not found.")
+        logger.error(f"Error: {extended_states_path} not found.")
         return set()
+
 
 def parse_dpkg_status(dpkg_status_path, manual_packages):
     """
@@ -60,7 +66,7 @@ def parse_dpkg_status(dpkg_status_path, manual_packages):
     """
     explicitly_installed = set()
     try:
-        with open(dpkg_status_path, 'r') as dpkg_file:
+        with open(dpkg_status_path, 'r', encoding='utf-8') as dpkg_file:
             package_name = None
             package_installed = False
 
@@ -71,25 +77,26 @@ def parse_dpkg_status(dpkg_status_path, manual_packages):
                     package_installed = True
                 elif line.strip() == "" and package_name:
                     if package_installed and package_name in manual_packages:
-                        # Add the package to the set/list
                         explicitly_installed.add(package_name)
-                    else:
-                        print(f"parse_dpkg_status package_name: {package_name} package_installed: {package_installed}")
-                        print(f"line: {line}")
-                    # Reset variables for next package
-                    package_name      = None
+                    package_name = None
                     package_installed = False
         return list(explicitly_installed)
     except FileNotFoundError:
-        print(f"Error: {dpkg_status_path} not found.")
+        logger.error(f"Error: {dpkg_status_path} not found.")
         return []
 
-if __name__ == "__main__":
-    dpkg_status_path     = "/var/lib/dpkg/status"
-    extended_states_path = "/var/lib/apt/extended_states"
 
-    if os.path.exists(dpkg_status_path):
-        manual_packages         = parse_manual_packages(extended_states_path)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Parse dpkg status and extended states files.")
+    parser.add_argument('--status', default='/var/lib/dpkg/status', help='Path to dpkg status file')
+    parser.add_argument('--states', default='/var/lib/apt/extended_states', help='Path to extended states file')
+    args = parser.parse_args()
+
+    dpkg_status_path = args.status
+    extended_states_path = args.states
+
+    if os.path.exists(dpkg_status_path) and os.access(dpkg_status_path, os.R_OK):
+        manual_packages = parse_manual_packages(extended_states_path)
         user_installed_packages = parse_dpkg_status(dpkg_status_path, manual_packages)
 
         if not user_installed_packages:
@@ -99,4 +106,4 @@ if __name__ == "__main__":
             for pkg in user_installed_packages:
                 print(f"- {pkg}")
     else:
-        print(f"{dpkg_status_path} does not exist. This script targets Debian-based systems only.")
+        logger.error(f"{dpkg_status_path} does not exist or is not accessible.")
