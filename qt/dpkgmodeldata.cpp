@@ -1,43 +1,48 @@
 #include "dpkgmodeldata.h"
+#include <QProcess>
 #include <QDebug>
 
-DpkgModelData::DpkgModelData(QObject *parent): QAbstractTableModel(parent)
+DpkgModelData::DpkgModelData(QObject *parent)
+    : QAbstractListModel(parent)
 {
 }
 
-int DpkgModelData::rowCount(const QModelIndex &parent) const {
-    Q_UNUSED(parent);
-    return m_data.size(); // Each line of output is a row
+int DpkgModelData::rowCount(const QModelIndex &parent) const
+{
+    if (parent.isValid())
+        return 0;
+    return m_data.size();
 }
 
-int DpkgModelData::columnCount(const QModelIndex &parent) const {
-    Q_UNUSED(parent);
-    return 1; // Single column showing script output
-}
-
-QVariant DpkgModelData::data(const QModelIndex &index, int role) const {
+QVariant DpkgModelData::data(const QModelIndex &index, int role) const
+{
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
     return m_data.at(index.row());
 }
 
-void DpkgModelData::runScript() {
+QHash<int, QByteArray> DpkgModelData::roleNames() const
+{
+    QHash<int, QByteArray> roles;
+    roles[Qt::DisplayRole] = "data"; // The "data" role will be used in QML
+    return roles;
+}
+
+void DpkgModelData::runScript()
+{
     QProcess process;
-    process.start("dpkg_status.py"); // Call the installed Python script
+    process.start("dpkg", QStringList() << "-l");
+
     if (!process.waitForFinished()) {
-        QString errorOutput = process.readAllStandardError();
-        qWarning() << "Failed to run script: " << process.errorString();
-        qWarning() << "Standard error output: " << errorOutput;
+        qWarning() << "Failed to run script:" << process.errorString();
+        return;
     }
 
-    // Notify the view that the data is about to change
-    beginResetModel();
-
-    // Capture output and split into lines
     QString output = process.readAllStandardOutput();
-    m_data = output.split('\n', Qt::SkipEmptyParts);
+    QStringList lines = output.split("\n");
 
-    // Notify the view that the data has changed
+    beginResetModel();
+    m_data = lines; // Update the model with the script output
     endResetModel();
 }

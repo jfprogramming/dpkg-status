@@ -1,22 +1,28 @@
 #pragma once
 
-
 #include <QAbstractTableModel>
 #include <QProcess>
 
-class DpkgModelData : public QAbstractTableModel {
+class DpkgModelData : public QAbstractListModel
+{
     Q_OBJECT
+
 public:
     explicit DpkgModelData(QObject *parent = nullptr);
 
-    // Overridden methods for QAbstractTableModel
+    // Override rowCount to return the number of rows
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+
+    // Override data to return the data for each role
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    // Method to call the Python script
+    // Expose the role names to QML
+    QHash<int, QByteArray> roleNames() const override;
+
+    // Method to populate the model with script output
     Q_INVOKABLE void runScript();
 
 private:
-    QStringList m_data; // To store the output of the script
+    QStringList m_data; // Store script output lines
 };
+
