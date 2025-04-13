@@ -253,7 +253,7 @@ The script determines whether a package is explicitly installed by analyzing key
         dch --create --package dpkg-status --newversion 1.0-1 --distribution unstable
         ```
         
-3**Copyright**
+3. **Copyright**
   - Add licensing information. Example:
   - ```plaintext 
     Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
@@ -279,9 +279,42 @@ The script determines whether a package is explicitly installed by analyzing key
     13
     ```
     
-6. **Install**
-  - Define which files to install and their destinations. 
-  - Create a file named **install** in the **debian/** directory:
-  - ```plaintext
-    src/dpkg_status.py usr/bin/dpkg_status
-    ```
+6. **Install the `.deb` Package**
+   - Navigate to the directory where the `.deb` package is located:
+      ```bash
+      cd ~/PycharmProjects/dpkg-status
+     ```
+   - Use dpkg to install the package:
+     ```bash 
+     sudo dpkg -i ../dpkg-status_1.1_all.deb
+     ```
+   - If there are missing dependencies, fix them using:
+     ```bash
+      sudo apt-get install -f
+     ```
+   - Run the Script
+     - Confirm the script is installed in /usr/bin:
+     ```bash
+      ls /usr/bin/dpkg_status
+     ```
+   - Run the script directly:
+     ```bash
+      dpkg_status
+     ```
+     
+## **Debugging Installation Issues** 
+     - If the installation fails, check for errors in the terminal and resolve them.
+     - To remove the package and reinstall it:
+     ```bash
+     sudo dpkg -r dpkg-status
+     sudo dpkg -i ../dpkg-status_1.1_all.deb
+     ```
+     - Verify the Installation: Check if the script is now installed without the .py extension:
+     ```bash
+     ls /usr/bin/dpkg_status
+     ```
+     - If the output shows /usr/bin/dpkg_status, the script has been successfully renamed. 
+     - Run the Script: You can now run the script without the .py extension:
+     ```bash
+     dpkg_status
+     ```

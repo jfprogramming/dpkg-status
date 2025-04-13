@@ -12,10 +12,14 @@ Packages explicitly installed by the user:
 - cpio
 - curl
 - dash
+- debhelper
 - debianutils
+- devscripts
+- dh-python
 - diffstat
 - diffutils
 - doxygen
+- dpkg-status
 - efibootmgr
 - ffmpeg
 - file

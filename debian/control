@@ -9,5 +9,5 @@ Homepage: https://github.com/jfprogramming/dpkg-status
 Package: dpkg-status
 Architecture: all
 Depends: ${python3:Depends}, ${misc:Depends}, python3
-Description: Python script to parse dpkg status files on Debian systems.
- This script determines explicitly installed packages on Debian-based systems.
+Description: Python script to parse dpkg status files on Debian systems
+ This script determines explicitly installed packages on Debian-based systems by directly accessing the dpkg status file (/var/lib/dpkg/status).

@@ -1,4 +1,10 @@
-dpkg-status (1.0) experimental; urgency=medium
+dpkg-status (1.1) unstable; urgency=medium
+
+  * Initial release.
+
+ -- Jesse Finneman <jfprogramming@yahoo.com>  Sun, 13 Apr 2025 00:27:21 -0600
+
+dpkg-status (1.0) unstable; urgency=medium
 
   * Initial release.
 
