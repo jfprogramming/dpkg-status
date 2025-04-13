@@ -24,7 +24,7 @@ QVariant DpkgModelData::data(const QModelIndex &index, int role) const {
 
 void DpkgModelData::runScript() {
     QProcess process;
-    process.start("dpkg-status.py"); // Call the installed Python script
+    process.start("dpkg_status.py"); // Call the installed Python script
     if (!process.waitForFinished()) {
         QString errorOutput = process.readAllStandardError();
         qWarning() << "Failed to run script: " << process.errorString();
