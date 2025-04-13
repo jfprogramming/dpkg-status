@@ -172,3 +172,27 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Ignore build directories
+build*/
+*.qrc.dep
+*.map
+*.pch
+*.dSYM/
+*.swp
+*.o
+*.obj
+*.dll
+*.so
+*.a
+*.lib
+*.lo
+*.la
+*.mod
+
+qtcreator/*.pro.user
+.qtcreator 
+Complete
+build/*
+qt/build
+qt/build/*
