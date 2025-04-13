@@ -4,7 +4,7 @@ project(dpkg-status VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Quick Qml)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Quick Qml Gui)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -16,7 +16,7 @@ qt_add_qml_module(appdpkg-status
     URI dpkg-status
     VERSION 1.0
     QML_FILES
-        Main.qml
+    main.qml
         SOURCES dpkgmodeldata.h dpkgmodeldata.cpp
 )
 
@@ -32,7 +32,10 @@ set_target_properties(appdpkg-status PROPERTIES
 )
 
 target_link_libraries(appdpkg-status
+    PRIVATE Qt6::Core
     PRIVATE Qt6::Quick
+    PRIVATE Qt6::Qml
+    PRIVATE Qt6::Gui
 )
 
 include(GNUInstallDirs)
