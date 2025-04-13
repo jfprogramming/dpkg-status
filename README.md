@@ -282,7 +282,8 @@ The script determines whether a package is explicitly installed by analyzing key
   - Download the .deb Package:
     - Provide a direct URL for the .deb file (from your GitHub release or another host):
     ```bash
-    wget https://github.com/jfprogramming/dpkg-status/releases/download/v1.1/dpkg-status_1.1_all.deb
+    wget https://github.com/jfprogramming/dpkg-status/releases/download/v1/dpkg-status_1.1_all.deb
+
     ```
   - Install the Package:
     - Use dpkg to install the package:
@@ -297,7 +298,7 @@ The script determines whether a package is explicitly installed by analyzing key
      ```
    - Use dpkg to install the package:
      ```bash 
-     sudo dpkg -i ../dpkg-status_1.0-1_all.deb
+     sudo dpkg -i dpkg-status_1.0-1_all.deb
      ```
    - If there are missing dependencies, fix them using:
      ```bash
