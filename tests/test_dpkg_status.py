@@ -1,7 +1,7 @@
 import unittest
 import subprocess
 from unittest.mock import patch, mock_open
-from src.main import parse_dpkg_status, parse_extended_states, get_apt_mark_showmanual
+from src.dpkg_status import parse_dpkg_status, parse_extended_states, get_apt_mark_showmanual
 
 
 class TestDpkgStatusParser(unittest.TestCase):
