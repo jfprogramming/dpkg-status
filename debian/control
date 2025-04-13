@@ -1,0 +1,13 @@
+Source: dpkg-status
+Section: utils
+Priority: optional
+Maintainer: Jesse Finneman <jfprogramming@yahoo.com>
+Build-Depends: debhelper-compat (= 13), python3
+Standards-Version: 4.5.0
+Homepage: https://github.com/jfprogramming/dpkg-status
+
+Package: dpkg-status
+Architecture: all
+Depends: ${python3:Depends}, ${misc:Depends}, dh-python, python3
+Description: Python script to parse dpkg status files on Debian systems.
+ This script determines explicitly installed packages on Debian-based systems.

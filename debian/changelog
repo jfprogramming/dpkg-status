@@ -1,0 +1,5 @@
+dpkg-status (1.0-1) unstable; urgency=medium
+
+  * Initial release.
+
+ -- Jesse Finneman <jfprogramming@yahoo.com>  Sat, 12 Apr 2025 23:37:33 -0600
