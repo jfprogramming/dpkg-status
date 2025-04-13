@@ -207,3 +207,81 @@ The script determines whether a package is explicitly installed by analyzing key
   Architecture: amd64
   Auto-Installed: 1
   ```
+
+## Creating debain package to install dpkg-status script
+1. **Structure Your Project**
+  - Debian packages have a specific directory structure. Organize your project like this:
+
+    ```plaintext
+    dpkg-status/               # Root directory of your project
+    ├── debian/                # Contains files needed for building the package
+    │   ├── control            # Metadata about the package
+    │   ├── changelog          # Change history for the package
+    │   ├── copyright          # Licensing information
+    │   ├── rules              # Instructions for building the package
+    │   ├── install            # Files to be installed and their destinations
+    │   ├── compat             # Debhelper compatibility level
+    ├── src/                   # Your Python source code
+    │   ├── dpkg_status.py     # Your main script
+    │   ├── other_files.py     # Any other Python files
+    ├── README.md              # Project documentation
+    ├── setup.py               # Python packaging file (optional, if needed)
+    ```
+2. **Create the debian/ Directory**
+  - This directory contains all the files required to build a Debian package.
+  - Required Files:
+    - **Control** - This defines the package metadata. 
+      - Create a file named control in the **debian/** directory with the following content:
+      - ```plaintext 
+        Source: dpkg-status
+        Section: utils
+        Priority: optional
+        Maintainer: Your Name <your.email@example.com>
+        Build-Depends: debhelper-compat (= 13), python3
+        Standards-Version: 4.5.0
+        Homepage: https://github.com/jfprogramming/dpkg-status
+
+        Package: dpkg-status
+        Architecture: all
+        Depends: ${python3:Depends}, ${misc:Depends}
+        Description: A Python script to parse dpkg status files on Debian systems.
+        This script determines explicitly installed packages on Debian-based systems.
+        ```
+    - **Changelog** - Document the changes made to your package. 
+      - Use the **dch** command to create and manage the changelog:
+      - ```bash 
+        dch --create --package dpkg-status --newversion 1.0-1 --distribution unstable
+        ```
+        
+3**Copyright**
+  - Add licensing information. Example:
+  - ```plaintext 
+    Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+    Upstream-Name: dpkg-status
+    Source: https://github.com/jfprogramming/dpkg-status
+
+    Files: *
+    Copyright: 2025 Your Name <your.email@example.com>
+    License: MIT
+    ```
+    
+4. **Rules**
+  - Instructions for building the package. Example:
+  - ```bash
+    #!/usr/bin/make -f
+    %:
+	dh $@
+    ```
+5. **compat**
+  - Specify the debhelper compatibility level. 
+  - Add this file with the following content:
+  - ```plaintext 
+    13
+    ```
+    
+6. **Install**
+  - Define which files to install and their destinations. 
+  - Create a file named **install** in the **debian/** directory:
+  - ```plaintext
+    src/dpkg_status.py usr/bin/dpkg_status
+    ```
