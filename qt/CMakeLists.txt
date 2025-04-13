@@ -18,6 +18,7 @@ qt_add_qml_module(appdpkg-status
     QML_FILES
     main.qml
         SOURCES dpkgmodeldata.h dpkgmodeldata.cpp
+        RESOURCES resource.qrc
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
