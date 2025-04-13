@@ -1,7 +1,9 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QDebug>
 #include "dpkgmodeldata.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -13,9 +15,13 @@ int main(int argc, char *argv[])
     DpkgModelData tableModel;
     engine.rootContext()->setContextProperty("tableModel", &tableModel);
 
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-    if (engine.rootObjects().isEmpty())
+    // Load QML file from the file system
+    engine.load(QUrl::fromLocalFile("main.qml")); // Ensure the file path matches your directory structure
+    if (engine.rootObjects().isEmpty()) {
+        qCritical() << "Failed to load QML file.";
         return -1;
+    }
 
     return app.exec();
 }
+
