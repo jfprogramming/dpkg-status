@@ -2,6 +2,20 @@
 
 `dpkg-status` is a Python3 script for parsing and analyzing the `/var/lib/dpkg/status` file on Debian-based systems. The script helps identify packages explicitly installed by the user, excluding dependencies and auto-installed packages.
 
+**Install the `.deb` Package VIA GitHub release and wget cmd.**
+  - Download the .deb Package:
+    - Provide a direct URL for the .deb file (from your GitHub release or another host):
+    ```bash
+    wget https://github.com/jfprogramming/dpkg-status/releases/download/v1/dpkg-status_1.1_all.deb
+    ```
+    - Use dpkg to install the package:
+    ```bash
+    sudo dpkg -i dpkg-status_1.1_all.deb
+    ```
+    - Run the Script: You can now run the script without the .py extension:
+    ```bash
+    dpkg_status.py
+    ```
 ---
 
 ## Features:
@@ -31,7 +45,7 @@ Before running the script, ensure your system meets the following requirements:
 
 ---
 
-## Installation:
+## Project Configuration:
 1. Clone the repository:
    - ```bash
      git clone https://github.com/jfprogramming/dpkg-status.git
@@ -283,12 +297,14 @@ The script determines whether a package is explicitly installed by analyzing key
     - Provide a direct URL for the .deb file (from your GitHub release or another host):
     ```bash
     wget https://github.com/jfprogramming/dpkg-status/releases/download/v1/dpkg-status_1.1_all.deb
-
     ```
-  - Install the Package:
     - Use dpkg to install the package:
     ```bash
     sudo dpkg -i dpkg-status_1.1_all.deb
+    ```
+    - Run the Script: You can now run the script without the .py extension:
+    ```bash
+    dpkg_status.py
     ```
     
 7. **Install the `.deb` Package by cloning repo**
@@ -307,26 +323,29 @@ The script determines whether a package is explicitly installed by analyzing key
    - Run the Script
      - Confirm the script is installed in /usr/bin:
      ```bash
-      ls /usr/bin/dpkg_status
+      ls /usr/bin/dpkg_status.py
      ```
    - Run the script directly:
      ```bash
-      dpkg_status
+      dpkg_status.py
      ```
      
-## **Debugging Installation Issues** 
-     - If the installation fails, check for errors in the terminal and resolve them.
-     - To remove the package and reinstall it:
-     ```bash
-     sudo dpkg -r dpkg-status
-     sudo dpkg -i ../dpkg-status_1.1_all.deb
-     ```
-     - Verify the Installation: Check if the script is now installed without the .py extension:
-     ```bash
-     ls /usr/bin/dpkg_status
-     ```
-     - If the output shows /usr/bin/dpkg_status, the script has been successfully renamed. 
-     - Run the Script: You can now run the script without the .py extension:
-     ```bash
-     dpkg_status
-     ```
+## **Debugging Installation Issues**
+  - Enable verbose debugging out put switch logging level from **INFO** to **DEBUG**
+    - logging.basicConfig(level=logging.DEBUG)
+  - If the installation fails, check for errors in the terminal and resolve them.
+  - To remove the package and reinstall it:
+    ```bash
+      sudo dpkg -r dpkg-status
+      sudo dpkg -i dpkg-status_1.1_all.deb
+    ```
+  - Verify the Installation: Check if the script is now installed without the .py extension:
+    ```bash
+    ls /usr/bin/dpkg_status.py
+    ```
+  - If the output shows /usr/bin/dpkg_status, the script has been successfully renamed. 
+  - Run the Script: You can now run the script without the .py extension:
+    ```bash
+    dpkg_status.py
+    ```
+
