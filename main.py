@@ -72,8 +72,7 @@ def parse_dpkg_status(dpkg_status_path, auto_installed_packages):
                     else:
                         print(f"Skipped package: {package_name} (Installed: {package_installed}, Auto-Installed: {package_name in auto_installed_packages})")
 
-                    # Reset metadat variables
-                    package_name      = None
+                    # Reset metadata variables
                     package_installed = False
 
     except FileNotFoundError:
