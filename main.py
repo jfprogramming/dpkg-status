@@ -3,6 +3,7 @@ import os
 import argparse
 import logging
 
+
 """
 dpkg-status Parser Script
 
@@ -33,28 +34,38 @@ Jesse Finn
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 def parse_manual_packages(extended_states_path):
     """
-    Parses the extended_states file to build a set of packages explicitly installed by the user.
+    Parses the extended_states file to determine explicitly installed packages.
     :param extended_states_path: Path to /var/lib/apt/extended_states file.
-    :return: Set of manually installed package names.
+    :return: Set of explicitly installed package names.
     """
     manual_packages_set = set()
     try:
         if os.path.exists(extended_states_path) and os.access(extended_states_path, os.R_OK):
-            with open(extended_states_path, 'r', encoding='utf-8') as extended_file:
+            with open(extended_states_path, "r", encoding="utf-8") as extended_file:
                 package_name = None
+                auto_installed = False
+
                 for line in extended_file:
+                    line = line.strip()
                     if line.startswith("Package:"):
                         package_name = line.split(":")[1].strip()
-                    elif line.startswith("Manual:") and "yes" in line and package_name:
-                        manual_packages_set.add(package_name)
+                        auto_installed = False  # Reset flag for new package
+                    elif line.startswith("Auto-Installed:"):
+                        auto_installed = line.split(":")[1].strip() == "1"
+
+                    # At the end of a package block, add to manual_packages_set if not auto-installed
+                    if line == "" and package_name:
+                        if not auto_installed:
+                            manual_packages_set.add(package_name)
+                        package_name = None  # Reset for the next package
         else:
-            logger.error(f"Cannot access file: {extended_states_path}")
-        return manual_packages_set
+            print(f"Cannot access file: {extended_states_path}")
     except FileNotFoundError:
-        logger.error(f"Error: {extended_states_path} not found.")
-        return set()
+        print(f"Error: {extended_states_path} not found.")
+    return manual_packages_set
 
 
 def parse_dpkg_status(dpkg_status_path, manual_packages):
