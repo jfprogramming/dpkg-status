@@ -1,4 +1,4 @@
-dpkg-status (1.0-1) unstable; urgency=medium
+dpkg-status (1.0) experimental; urgency=medium
 
   * Initial release.
 

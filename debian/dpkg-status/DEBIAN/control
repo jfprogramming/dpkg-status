@@ -1,9 +1,9 @@
 Package: dpkg-status
-Version: 1.0-1
+Version: 1.0
 Architecture: all
 Maintainer: Jesse Finneman <jfprogramming@yahoo.com>
-Installed-Size: 21
-Depends: dh-python, python3
+Installed-Size: 22
+Depends: python3:any, python3
 Section: utils
 Priority: optional
 Homepage: https://github.com/jfprogramming/dpkg-status
