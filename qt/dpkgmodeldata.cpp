@@ -30,11 +30,13 @@ void DpkgModelData::runScript() {
         return;
     }
 
+    // Notify the view that the data is about to change
+    beginResetModel();
+
     // Capture output and split into lines
     QString output = process.readAllStandardOutput();
     m_data = output.split('\n', Qt::SkipEmptyParts);
 
     // Notify the view that the data has changed
-    beginResetModel();
     endResetModel();
 }
