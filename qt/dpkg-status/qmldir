@@ -1,5 +1,0 @@
-module dpkg-status
-typeinfo appdpkg-status.qmltypes
-prefer :/qt/qml/dpkg-status/
-Main 1.0 Main.qml
-

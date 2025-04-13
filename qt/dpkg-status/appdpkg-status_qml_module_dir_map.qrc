@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="/">
-    <file alias="/qt/qml/dpkg-status">/home/jfinn/PycharmProjects/dpkg-status/qt/dpkg-status</file>
-
-  </qresource>
-</RCC>
