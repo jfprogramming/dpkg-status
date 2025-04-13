@@ -278,7 +278,19 @@ The script determines whether a package is explicitly installed by analyzing key
     13
     ```
     
-6. **Install the `.deb` Package**
+6. **Install the `.deb` Package VIA GitHub release and Wget**
+  - Download the .deb Package:
+    - Provide a direct URL for the .deb file (from your GitHub release or another host):
+    ```bash
+    wget https://github.com/jfprogramming/dpkg-status/releases/download/v1.1/dpkg-status_1.1_all.deb
+    ```
+  - Install the Package:
+    - Use dpkg to install the package:
+    ```bash
+    sudo dpkg -i dpkg-status_1.1_all.deb
+    ```
+    
+7. **Install the `.deb` Package by cloning repo**
    - Navigate to the directory where the `.deb` package is located:
       ```bash
       cd ~/PycharmProjects/dpkg-status
