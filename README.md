@@ -12,7 +12,7 @@
     ```bash
     sudo dpkg -i dpkg-status_1.1_all.deb
     ```
-    - Run the Script: You can now run the script without the .py extension:
+    - Run the Script: You can now run the script:
     ```bash
     dpkg_status.py
     ```
@@ -292,7 +292,25 @@ The script determines whether a package is explicitly installed by analyzing key
     13
     ```
     
-6. **Install the `.deb` Package VIA GitHub release and Wget**
+6. **Build the deb package**
+  - Run the following command to build the deb package 
+    - ```bash 
+      debuild -us -uc
+      ```
+  - Clean and rebuild 
+    - ```bash
+      fakeroot debian/rules clean
+      ```
+  - Install local copy of deb package built 
+    - ```bash 
+      sudo dpkg -i dpkg-status_1.1_all.deb
+      ``` 
+  - Remove installed package  
+    - ```bash 
+      sudo dpkg -r dpkg-status
+      ```  
+
+7. **Install the `.deb` Package VIA GitHub release and Wget**
   - Download the .deb Package:
     - Provide a direct URL for the .deb file (from your GitHub release or another host):
     ```bash
@@ -307,7 +325,7 @@ The script determines whether a package is explicitly installed by analyzing key
     dpkg_status.py
     ```
     
-7. **Install the `.deb` Package by cloning repo**
+8. **Install the `.deb` Package by cloning repo**
    - Navigate to the directory where the `.deb` package is located:
       ```bash
       cd ~/PycharmProjects/dpkg-status

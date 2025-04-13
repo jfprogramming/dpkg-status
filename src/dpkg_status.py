@@ -163,11 +163,7 @@ def main():
     # Get the list of packages returned by apt-mark showmanual
     apt_mark_manual = get_apt_mark_showmanual()
 
-    # Combine results with apt-mark showmanual
-    #final_explicitly_installed = explicitly_installed_packages.union(manual_packages_from_states, apt_mark_manual)
-
     # Convert set for list of displaying to console in one line
-    #explicitly_installed_list = list(final_explicitly_installed)
     explicitly_installed_list = list(explicitly_installed_packages)
     print(f"explicitly_installed_list: {explicitly_installed_list}")
 
