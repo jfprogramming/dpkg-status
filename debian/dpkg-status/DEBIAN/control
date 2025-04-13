@@ -1,0 +1,11 @@
+Package: dpkg-status
+Version: 1.1
+Architecture: all
+Maintainer: Jesse Finneman <jfprogramming@yahoo.com>
+Installed-Size: 20
+Depends: python3:any, python3
+Section: utils
+Priority: optional
+Homepage: https://github.com/jfprogramming/dpkg-status
+Description: Python script to parse dpkg status files on Debian systems
+ This script determines explicitly installed packages on Debian-based systems by directly accessing the dpkg status file (/var/lib/dpkg/status).

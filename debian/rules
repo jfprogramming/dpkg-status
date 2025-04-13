@@ -1,0 +1,7 @@
+#!/usr/bin/make -f
+%:
+	dh $@ --with python3
+
+clean:
+	dh_clean
+

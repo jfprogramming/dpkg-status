@@ -207,3 +207,113 @@ The script determines whether a package is explicitly installed by analyzing key
   Architecture: amd64
   Auto-Installed: 1
   ```
+
+## Creating Debian package to install dpkg-status script
+  - Debian packages have a specific directory structure. Organize your project like this:
+
+    ```plaintext
+    dpkg-status/               # Root directory of your project
+    ├── debian/                # Contains files needed for building the package
+    │   ├── control            # Metadata about the package
+    │   ├── changelog          # Change history for the package
+    │   ├── copyright          # Licensing information
+    │   ├── rules              # Instructions for building the package
+    │   ├── install            # Files to be installed and their destinations
+    │   ├── compat             # Debhelper compatibility level
+    ├── src/                   # Your Python source code
+    │   ├── dpkg_status.py     # Your main script
+    │   ├── other_files.py     # Any other Python files
+    ├── README.md              # Project documentation
+    ├── setup.py               # Python packaging file (optional, if needed)
+    ```
+2. **Create the debian/ Directory**
+  - This directory contains all the files required to build a Debian package.
+  - Required Files:
+    - **Control** - This defines the package metadata. 
+      - Create a file named control in the **debian/** directory with the following content:
+      - ```plaintext 
+        Source: dpkg-status
+        Section: utils
+        Priority: optional
+        Maintainer: Your Name <your.email@example.com>
+        Build-Depends: debhelper-compat (= 13), python3
+        Standards-Version: 4.5.0
+        Homepage: https://github.com/jfprogramming/dpkg-status
+
+        Package: dpkg-status
+        Architecture: all
+        Depends: ${python3:Depends}, ${misc:Depends}
+        Description: A Python script to parse dpkg status files on Debian systems.
+        This script determines explicitly installed packages on Debian-based systems.
+        ```
+    - **Changelog** - Document the changes made to your package. 
+      - Use the **dch** command to create and manage the changelog:
+      - ```bash 
+        dch --create --package dpkg-status --newversion 1.1 --distribution unstable
+        ```
+        
+3. **Copyright**
+  - Add licensing information. Example:
+  - ```plaintext 
+    Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+    Upstream-Name: dpkg-status
+    Source: https://github.com/jfprogramming/dpkg-status
+
+    Files: *
+    Copyright: 2025 Your Name <your.email@example.com>
+    License: MIT
+    ```
+    
+4. **Rules**
+  - Instructions for building the package. Example:
+  - ```bash
+    #!/usr/bin/make -f
+    %:
+	dh $@
+    ```
+5. **compat**
+  - Specify the debhelper compatibility level. 
+  - Add this file with the following content:
+  - ```plaintext 
+    13
+    ```
+    
+6. **Install the `.deb` Package**
+   - Navigate to the directory where the `.deb` package is located:
+      ```bash
+      cd ~/PycharmProjects/dpkg-status
+     ```
+   - Use dpkg to install the package:
+     ```bash 
+     sudo dpkg -i ../dpkg-status_1.0-1_all.deb
+     ```
+   - If there are missing dependencies, fix them using:
+     ```bash
+      sudo apt-get install -f
+     ```
+   - Run the Script
+     - Confirm the script is installed in /usr/bin:
+     ```bash
+      ls /usr/bin/dpkg_status
+     ```
+   - Run the script directly:
+     ```bash
+      dpkg_status
+     ```
+     
+## **Debugging Installation Issues** 
+     - If the installation fails, check for errors in the terminal and resolve them.
+     - To remove the package and reinstall it:
+     ```bash
+     sudo dpkg -r dpkg-status
+     sudo dpkg -i ../dpkg-status_1.1_all.deb
+     ```
+     - Verify the Installation: Check if the script is now installed without the .py extension:
+     ```bash
+     ls /usr/bin/dpkg_status
+     ```
+     - If the output shows /usr/bin/dpkg_status, the script has been successfully renamed. 
+     - Run the Script: You can now run the script without the .py extension:
+     ```bash
+     dpkg_status
+     ```
