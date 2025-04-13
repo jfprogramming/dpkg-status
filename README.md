@@ -249,7 +249,7 @@ The script determines whether a package is explicitly installed by analyzing key
     - **Changelog** - Document the changes made to your package. 
       - Use the **dch** command to create and manage the changelog:
       - ```bash 
-        dch --create --package dpkg-status --newversion 1.0-1 --distribution unstable
+        dch --create --package dpkg-status --newversion 1.1 --distribution unstable
         ```
         
 3. **Copyright**
