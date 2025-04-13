@@ -6,11 +6,11 @@
   - Download the .deb Package:
     - Provide a direct URL for the .deb file (from your GitHub release or another host):
     ```bash
-    wget https://github.com/jfprogramming/dpkg-status/releases/download/v1/dpkg-status_1.1_all.deb
+    wget https://github.com/jfprogramming/dpkg-status/releases/download/v1/dpkg-status_1.2_all.deb
     ```
     - Use dpkg to install the package:
     ```bash
-    sudo dpkg -i dpkg-status_1.1_all.deb
+    sudo dpkg -i dpkg-status_1.2_all.deb
     ```
     - Run the Script: You can now run the script:
     ```bash
@@ -311,7 +311,7 @@ The script determines whether a package is explicitly installed by analyzing key
       ```
   - Install local copy of deb package built 
     - ```bash 
-      sudo dpkg -i dpkg-status_1.1_all.deb
+      sudo dpkg -i dpkg-status_1.2_all.deb
       ``` 
   - Remove installed package  
     - ```bash 
@@ -322,11 +322,11 @@ The script determines whether a package is explicitly installed by analyzing key
   - Download the .deb Package:
     - Provide a direct URL for the .deb file (from your GitHub release or another host):
     ```bash
-    wget https://github.com/jfprogramming/dpkg-status/releases/download/v1/dpkg-status_1.1_all.deb
+    wget https://github.com/jfprogramming/dpkg-status/releases/download/v1.2/dpkg-status_1.2_all.deb
     ```
     - Use dpkg to install the package:
     ```bash
-    sudo dpkg -i dpkg-status_1.1_all.deb
+    sudo dpkg -i dpkg-status_1.2_all.deb
     ```
     - Run the Script: You can now run the script with:
     ```bash
@@ -340,7 +340,7 @@ The script determines whether a package is explicitly installed by analyzing key
      ```
    - Use dpkg to install the package:
      ```bash 
-     sudo dpkg -i dpkg-status_1.0-1_all.deb
+     sudo dpkg -i dpkg-status_1.2_all.deb
      ```
    - If there are missing dependencies, fix them using:
      ```bash
@@ -363,7 +363,7 @@ The script determines whether a package is explicitly installed by analyzing key
   - To remove the package and reinstall it:
     ```bash
       sudo dpkg -r dpkg-status
-      sudo dpkg -i dpkg-status_1.1_all.deb
+      sudo dpkg -i dpkg-status_1.2_all.deb
     ```
   - Verify the Installation: Check if the script is now installed:
     ```bash
