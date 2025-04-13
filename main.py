@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import os
 import logging
 import subprocess
 
@@ -49,6 +48,7 @@ def parse_dpkg_status(dpkg_status_path, auto_installed_packages):
                 line = line.strip()
                 if line.startswith("Package:"):
                     package_name = line.split(":")[1].strip()
+                    continue
                 elif line.startswith("Status:") and "install ok installed" in line:
                     package_installed = True
 
@@ -56,6 +56,9 @@ def parse_dpkg_status(dpkg_status_path, auto_installed_packages):
                 if (line == "" or line.startswith("Package:")) and package_name:
                     if package_installed and package_name not in auto_installed_packages:
                         explicitly_installed.add(package_name)
+                        print(f"Added to explicitly installed: {package_name}")
+                    else:
+                        print(f"Skipped package: {package_name} (Installed: {package_installed}, Auto-Installed: {package_name in auto_installed_packages})")
                     package_name = None
                     package_installed = False
     except FileNotFoundError:
@@ -93,7 +96,7 @@ def parse_extended_states(extended_states_path):
                     if auto_installed is None:
                         # Handle missing Auto-Installed field
                         manual_packages_from_states.add(package_name)
-                    if auto_installed is True:
+                    elif auto_installed is True:
                         auto_installed_packages.add(package_name)
                         print(f"Added to auto-installed: {package_name}")
                     elif auto_installed is False:
