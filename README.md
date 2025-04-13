@@ -1,17 +1,81 @@
 # dpkg-status
 
-- **Python3 script** that parses the dpkg status file to extract packages explicitly installed by the user.
-  - `file_path`: Path to `/var/lib/dpkg/status` file.
-  - `return`: List of explicitly installed packages.
+`dpkg-status` is a Python3 script for parsing and analyzing the `/var/lib/dpkg/status` file on Debian-based systems. The script helps identify packages explicitly installed by the user, excluding dependencies and auto-installed packages.
 
-- **Detection Algorithm**:
-  The script determines whether a package is explicitly installed by examining the `dpkg status` file. It considers packages marked as `Status: install ok installed`, filtering out dependencies or auto-installed packages (those installed as part of another package). The process involves:
-    1. Parsing `/var/lib/dpkg/status` line by line.
-    2. Extracting package names and their associated metadata.
-    3. Identifying explicitly installed packages based on relevant markers (e.g., status, dependencies).
+---
 
-- **Example `/var/lib/dpkg/status` file contents**:
+## Features:
+- Parses `/var/lib/dpkg/status` to list explicitly installed packages.
+- Utilizes `/var/lib/apt/extended_states` for auto-installed metadata.
+- Optionally integrates with `apt-mark showmanual` for enhanced accuracy.
 
+---
+
+## Prerequisites:
+To run the script, ensure the following prerequisites are met:
+1. **Operating System**: Debian-based system (e.g., Debian 12, Ubuntu, Linux Mint).
+2. **Python Version**: Python 3.6 or newer.
+3. **Required Files**:
+   - `/var/lib/dpkg/status`: The dpkg status file.
+   - `/var/lib/apt/extended_states`: The extended states file.
+4. **Permissions**:
+   - Read access to `/var/lib/dpkg/status` and `/var/lib/apt/extended_states`.
+
+---
+
+## System Requirements:
+Before running the script, ensure your system meets the following requirements:
+- **Memory**: At least 512 MB RAM.
+- **Disk Space**: Minimal disk space is required, but ensure `/var/lib/dpkg/` and `/var/lib/apt/` are accessible.
+- **Linux Distribution**: This script is designed for Debian-based distributions.
+
+---
+
+## Installation:
+1. Clone the repository:
+   - ```bash
+     git clone https://github.com/jfprogramming/dpkg-status.git
+     cd dpkg-status
+   
+2. Set up a virtual environment (optional but recommended):
+   - ```bash
+     python3 -m venv .venv
+     source .venv/bin/activate
+
+3. Install dependencies (if required):
+   - ```bash 
+     pip install -r requirements.txt
+     
+4. Running  
+   - ```bash
+     ./main.py 
+
+## Detection Algorithm:
+The script determines whether a package is explicitly installed by analyzing key package management files and metadata. It excludes auto-installed packages (dependencies installed as part of another package) and focuses on packages explicitly installed by the user. The process involves the following steps:
+
+1. **Parsing the `/var/lib/dpkg/status` File**:
+   - The script reads the `dpkg status` file line by line.
+   - It extracts information such as package names, statuses, and metadata fields like `Status: install ok installed`.
+
+2. **Filtering Auto-Installed Packages**:
+   - Auto-installed packages are identified by cross-checking with `/var/lib/apt/extended_states`.
+   - Packages with the marker `Auto-Installed: 1` in the `extended_states` file are excluded from the explicitly installed list.
+
+3. **Combining with `apt-mark showmanual`**:
+   - The script optionally integrates with the output of `apt-mark showmanual` to incorporate packages manually marked by the user as installed.
+
+4. **Identifying Explicitly Installed Packages**:
+   - Packages are considered explicitly installed if:
+     - They are marked as `Status: install ok installed` in `/var/lib/dpkg/status`.
+     - They are not listed as auto-installed in `/var/lib/apt/extended_states`.
+     - They are included in the output of `apt-mark showmanual` (if applicable).
+
+5. **Output**:
+   - The script outputs a final list of explicitly installed packages by merging the results from the above steps, ensuring no duplicates.
+
+## Example file contents:
+
+1. **File:`/var/lib/dpkg/status`**:
   ```plaintext
   Package: adwaita-icon-theme
   Status: install ok installed
@@ -74,3 +138,40 @@
   Suggests: gnome-cards-data
   Description: GNOME solitaire card game collection
   This is a collection of over eighty different
+  ```
+
+
+2. **File: `/var/lib/apt/extended_states`**: 
+  ```plaintext
+  Package: libtraceevent1
+  Architecture: amd64
+  Auto-Installed: 1
+
+  Package: linux-hwe-6.8-headers-6.8.0-57
+  Architecture: amd64
+  Auto-Installed: 1
+
+  Package: linux-modules-6.8.0-57-generic
+  Architecture: amd64
+  Auto-Installed: 1
+
+  Package: linux-hwe-6.8-tools-6.8.0-57
+  Architecture: amd64
+  Auto-Installed: 1
+
+  Package: linux-image-6.8.0-57-generic
+  Architecture: amd64
+  Auto-Installed: 1
+
+  Package: linux-headers-6.8.0-57-generic
+  Architecture: amd64
+  Auto-Installed: 1
+
+  Package: linux-tools-6.8.0-57-generic
+  Architecture: amd64
+  Auto-Installed: 1
+
+   Package: linux-modules-extra-6.8.0-57-generic
+  Architecture: amd64
+  Auto-Installed: 1
+  ```
