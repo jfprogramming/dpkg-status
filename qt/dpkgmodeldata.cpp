@@ -32,7 +32,8 @@ QHash<int, QByteArray> DpkgModelData::roleNames() const
 void DpkgModelData::runScript()
 {
     QProcess process;
-    process.start("dpkg", QStringList() << "-l");
+    // Run the Python script installed in the system by the custom deb package
+    process.start("dpkg_status.py");
 
     if (!process.waitForFinished()) {
         qWarning() << "Failed to run script:" << process.errorString();
