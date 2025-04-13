@@ -162,6 +162,36 @@ def get_apt_mark_showmanual():
 
 
 def main():
+    # File paths used for determining user explicitly installed packages
+
+    """
+    File : /var/lib/dpkg/status
+    This file is part of the dpkg system, which is the backend package manager used by Debian-based systems.
+    It serves as the central database of installed packages.
+    Tracks every package installed on the system, along with its metadata.
+
+    File : /var/lib/apt/extended_states
+    This file is used by the APT package manager to track extra information about packages, specifically their installation status.
+    Tracks whether a package was Auto-installed as a dependency (Auto-Installed: 1).
+    Not explicitly marked as auto-installed (field absent or Auto-Installed: 0).
+    Helps determine which packages were installed automatically as dependencies.
+
+    Note: On Debian-based systems, APT maintains logs that record package installations, upgrades, and removals.
+    Here are the key log files:
+
+    File: /var/log/dpkg.log
+    Tracks all package management actions performed by dpkg, including those initiated by apt.
+    Logs package installations, removals, and upgrades.
+
+    File: /var/log/apt/term.log
+    Logs detailed terminal output for apt commands.
+    Includes verbose information about package downloads, installations, and configurations.
+
+    File: /var/log/apt/history.log
+    Tracks high-level actions performed by apt, such as package installations, upgrades, and removals.
+    Records the command used (e.g., apt install) and the list of affected packages.
+    """
+
     dpkg_status_path     = "/var/lib/dpkg/status"
     extended_states_path = "/var/lib/apt/extended_states"
 
