@@ -205,10 +205,19 @@ def main():
     apt_mark_manual = get_apt_mark_showmanual()
     final_explicitly_installed = explicitly_installed_packages.union(manual_packages_from_states, apt_mark_manual)
 
-    # Display results
-    print("Packages explicitly installed by the user:")
-    for pkg in sorted(final_explicitly_installed):
-        print(f"- {pkg}")
+    # Save results
+    output_file = "explicitly_installed_packages.txt"
+    try:
+        with open(output_file, "w", encoding="utf-8") as file:
+            print("Packages explicitly installed by the user:")
+            file.write("Packages explicitly installed by the user:\n")
+            # Display results to console and write results to file
+            for pkg in sorted(final_explicitly_installed):
+                print(f"- {pkg}")
+                file.write(f"- {pkg}\n")
+        logger.info(f"Results saved to {output_file}")
+    except Exception as e:
+        logger.error(f"Failed to save results to {output_file}: {e}")
 
     # Optional: Log inconsistencies
     logger.info("\nCross-checking results...")
