@@ -208,8 +208,7 @@ The script determines whether a package is explicitly installed by analyzing key
   Auto-Installed: 1
   ```
 
-## Creating debain package to install dpkg-status script
-1. **Structure Your Project**
+## Creating Debian package to install dpkg-status script
   - Debian packages have a specific directory structure. Organize your project like this:
 
     ```plaintext
