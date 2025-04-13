@@ -130,8 +130,7 @@ def parse_extended_states(extended_states_path):
                         manual_packages_from_states.add(package_name)
                         print(f"Added to manually installed: {package_name}")
 
-                    # Reset metadat variables
-                    package_name   = None
+                    # Reset metadata variables
                     auto_installed = None
 
         # Output the lists in a readable format for debugging
