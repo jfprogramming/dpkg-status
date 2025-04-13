@@ -43,26 +43,24 @@ def parse_manual_packages(extended_states_path):
     """
     manual_packages_set = set()
     try:
-        if os.path.exists(extended_states_path) and os.access(extended_states_path, os.R_OK):
-            with open(extended_states_path, "r", encoding="utf-8") as extended_file:
-                package_name = None
-                auto_installed = False
+        with open(extended_states_path, "r", encoding="utf-8") as extended_file:
+            package_name = None
+            auto_installed = False
 
-                for line in extended_file:
-                    line = line.strip()
-                    if line.startswith("Package:"):
-                        package_name = line.split(":")[1].strip()
-                        auto_installed = False  # Reset flag for new package
-                    elif line.startswith("Auto-Installed:"):
-                        auto_installed = line.split(":")[1].strip() == "1"
+            for line in extended_file:
+                line = line.strip()
+                if line.startswith("Package:"):
+                    package_name = line.split(":")[1].strip()
+                    auto_installed = False
+                elif line.startswith("Auto-Installed:"):
+                    auto_installed = line.split(":")[1].strip() == "1"
 
-                    # At the end of a package block, add to manual_packages_set if not auto-installed
-                    if line == "" and package_name:
-                        if not auto_installed:
-                            manual_packages_set.add(package_name)
-                        package_name = None  # Reset for the next package
-        else:
-            print(f"Cannot access file: {extended_states_path}")
+                # Add package at the end of block or when reaching a new package
+                if (line == "" or line.startswith("Package:")) and package_name:
+                    if not auto_installed:
+                        manual_packages_set.add(package_name)
+                    package_name = None
+                    auto_installed = False
     except FileNotFoundError:
         print(f"Error: {extended_states_path} not found.")
     return manual_packages_set
@@ -82,11 +80,14 @@ def parse_dpkg_status(dpkg_status_path, manual_packages):
             package_installed = False
 
             for line in dpkg_file:
+                line = line.strip()
                 if line.startswith("Package:"):
                     package_name = line.split(":")[1].strip()
                 elif line.startswith("Status:") and "install ok installed" in line:
                     package_installed = True
-                elif line.strip() == "" and package_name:
+
+                # Add package at the end of block or when reaching a new package
+                if (line == "" or line.startswith("Package:")) and package_name:
                     if package_installed and package_name in manual_packages:
                         explicitly_installed.add(package_name)
                     package_name = None
