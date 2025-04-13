@@ -285,7 +285,7 @@ The script determines whether a package is explicitly installed by analyzing key
      ```
    - Use dpkg to install the package:
      ```bash 
-     sudo dpkg -i ../dpkg-status_1.1_all.deb
+     sudo dpkg -i ../dpkg-status_1.0-1_all.deb
      ```
    - If there are missing dependencies, fix them using:
      ```bash
