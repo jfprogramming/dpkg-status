@@ -1,0 +1,24 @@
+{
+    "classes": [
+        {
+            "className": "DpkgModelData",
+            "methods": [
+                {
+                    "access": "public",
+                    "name": "runScript",
+                    "returnType": "void"
+                }
+            ],
+            "object": true,
+            "qualifiedClassName": "DpkgModelData",
+            "superClasses": [
+                {
+                    "access": "public",
+                    "name": "QAbstractTableModel"
+                }
+            ]
+        }
+    ],
+    "inputFile": "dpkgmodeldata.h",
+    "outputRevision": 68
+}

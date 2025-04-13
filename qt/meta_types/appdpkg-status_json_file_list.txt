@@ -1,0 +1,1 @@
+/home/jfinn/PycharmProjects/dpkg-status/qt/appdpkg-status_autogen/include/../EWIEGA46WW/moc_dpkgmodeldata.cpp.json

@@ -1,0 +1,14 @@
+-rootPath
+/home/jfinn/PycharmProjects/dpkg-status/qt
+-cmake-output
+-output-file
+/home/jfinn/PycharmProjects/dpkg-status/qt/.qt/qml_imports/appdpkg-status_conf.cmake
+-importPath
+/home/jfinn/PycharmProjects/dpkg-status/qt/dpkg-status
+-importPath
+/home/jfinn/PycharmProjects/dpkg-status/qt
+-importPath
+/opt/Qt/6.7.2/gcc_64/./qml
+-qrcFiles
+/home/jfinn/PycharmProjects/dpkg-status/qt/.qt/rcc/qmake_dpkg-status.qrc
+/home/jfinn/PycharmProjects/dpkg-status/qt/.qt/rcc/appdpkg-status_raw_qml_0.qrc

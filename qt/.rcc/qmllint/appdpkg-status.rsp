@@ -1,0 +1,10 @@
+--bare
+-I
+/home/jfinn/PycharmProjects/dpkg-status/qt
+-I
+/opt/Qt/6.7.2/gcc_64/./qml
+--resource
+/home/jfinn/PycharmProjects/dpkg-status/qt/.qt/rcc/qmake_dpkg-status.qrc
+--resource
+/home/jfinn/PycharmProjects/dpkg-status/qt/.qt/rcc/appdpkg-status_raw_qml_0.qrc
+/home/jfinn/PycharmProjects/dpkg-status/qt/Main.qml
