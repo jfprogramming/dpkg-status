@@ -331,6 +331,8 @@ The script determines whether a package is explicitly installed by analyzing key
      ```
      
 ## **Debugging Installation Issues** 
+  - Enable verbose debugging out put switch logging level from **INFO** to **DEBUG**
+    - logging.basicConfig(level=logging.DEBUG)
   - If the installation fails, check for errors in the terminal and resolve them.
   - To remove the package and reinstall it:
     ```bash

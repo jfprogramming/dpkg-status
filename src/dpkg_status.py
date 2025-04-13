@@ -160,7 +160,7 @@ def main():
     # Parse dpkg status for explicitly installed packages
     explicitly_installed_packages = parse_dpkg_status(dpkg_status_path, auto_installed_packages)
 
-    # Get the list of packages returned by apt-mark showmanual 
+    # Get the list of packages returned by apt-mark showmanual
     apt_mark_manual = get_apt_mark_showmanual()
 
     # Combine results with apt-mark showmanual
