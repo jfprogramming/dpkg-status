@@ -1,10 +1,6 @@
 import unittest
 import subprocess
-import os
-import sys
 from unittest.mock import patch, mock_open
-# Add the src directory to the Python path
-sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 from src.main import parse_dpkg_status, parse_extended_states, get_apt_mark_showmanual
 
 

@@ -206,7 +206,7 @@ def main():
     final_explicitly_installed = explicitly_installed_packages.union(manual_packages_from_states, apt_mark_manual)
 
     # Save results
-    output_file = "explicitly_installed_packages.txt"
+    output_file = "../explicitly_installed_packages.txt"
     try:
         with open(output_file, "w", encoding="utf-8") as file:
             print("Packages explicitly installed by the user:")
