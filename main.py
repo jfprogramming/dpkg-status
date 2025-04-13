@@ -38,29 +38,44 @@ def parse_dpkg_status(dpkg_status_path, auto_installed_packages):
     :param auto_installed_packages: Set of auto-installed package names (from extended_states or other sources).
     :return: Set of packages explicitly installed by the user.
     """
+
+    # Create data Set() for storing package names for user explicitly installed packages
+    # Does not allow duplicate elements.
     explicitly_installed = set()
+
     try:
+        # Open the file in read mode with UTF-8 encoding
         with open(dpkg_status_path, 'r', encoding='utf-8') as dpkg_file:
-            package_name = None
+            # Variables to store metadata pulled from file
+            package_name      = None
             package_installed = False
 
+            # Loop through the file line by line for processing
             for line in dpkg_file:
+                # Remove any white space from the line to be evaluated
                 line = line.strip()
                 if line.startswith("Package:"):
+                    # Parse the package name from the current line
                     package_name = line.split(":")[1].strip()
+                    # Do not evaluate yet continue processing the next line
                     continue
                 elif line.startswith("Status:") and "install ok installed" in line:
+                    # Verified package is installed set package_installed flag to true
                     package_installed = True
 
-                # End of package block
+                # End of package block check for explicit installation by user
                 if (line == "" or line.startswith("Package:")) and package_name:
                     if package_installed and package_name not in auto_installed_packages:
+                        # Add the package to the explicitly_installed data set for final output
                         explicitly_installed.add(package_name)
                         print(f"Added to explicitly installed: {package_name}")
                     else:
                         print(f"Skipped package: {package_name} (Installed: {package_installed}, Auto-Installed: {package_name in auto_installed_packages})")
-                    package_name = None
+
+                    # Reset metadat variables
+                    package_name      = None
                     package_installed = False
+
     except FileNotFoundError:
         logger.error(f"Error: {dpkg_status_path} not found.")
     return explicitly_installed
@@ -72,22 +87,33 @@ def parse_extended_states(extended_states_path):
     :param extended_states_path: Path to /var/lib/apt/extended_states file.
     :return: Set of auto-installed and manually installed packages.
     """
-    auto_installed_packages = set()
-    manual_packages_from_states = set()
-    try:
-        with open(extended_states_path, "r", encoding="utf-8") as extended_file:
-            package_name = None
-            auto_installed = None  # None means no info yet
 
+    # Create data Set() for storing package names for auto and manually installed packages
+    # Does not allow duplicate elements.
+    auto_installed_packages     = set()
+    manual_packages_from_states = set()
+
+    try:
+        # Open the file in read mode with UTF-8 encoding
+        with open(extended_states_path, "r", encoding="utf-8") as extended_file:
+            # Variables to store metadata pulled from file
+            package_name   = None
+            auto_installed = None
+
+            # Loop through the file line by line for processing
             for line in extended_file:
+                # Remove any white space from the line to be evaluated
                 line = line.strip()
                 if line.startswith("Package:"):
+                    # Parse the package name from the current line
                     package_name = line.split(":")[1].strip()
-                    auto_installed = None  # Reset for the next package
+                    # Reset for the next package
+                    auto_installed = None
                     print(f"Found package: {package_name}")
-                    # go to the next line to process auto install flag
+                    # Do not evaluate yet continue processing the next line
                     continue
                 elif line.startswith("Auto-Installed:"):
+                    # Store boolean value for if package was auto installed
                     auto_installed = line.split(":")[1].strip() == "1"
                     print(f"  Auto-Installed: {auto_installed}")
 
@@ -97,15 +123,19 @@ def parse_extended_states(extended_states_path):
                         # Handle missing Auto-Installed field
                         manual_packages_from_states.add(package_name)
                     elif auto_installed is True:
+                        # Add package name to list of auto install packages
                         auto_installed_packages.add(package_name)
                         print(f"Added to auto-installed: {package_name}")
                     elif auto_installed is False:
+                        # Add package name to list of manually user installed packages
                         manual_packages_from_states.add(package_name)
                         print(f"Added to manually installed: {package_name}")
+
+                    # Reset metadat variables
                     package_name   = None
                     auto_installed = None
 
-        # Output the lists in a readable format
+        # Output the lists in a readable format for debugging
         print("Auto-Installed Packages:")
         for pkg in sorted(auto_installed_packages):
             print(f"  - {pkg}")
