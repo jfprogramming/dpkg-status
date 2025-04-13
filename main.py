@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import os
-import argparse
 import logging
 import subprocess
 
@@ -29,52 +28,16 @@ Author:
 Jesse Finn
 """
 
-
-
+# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
-def parse_extended_states(extended_states_path):
+def parse_dpkg_status(dpkg_status_path, auto_installed_packages):
     """
-    Parses the extended_states file to get auto-installed and manually installed package information.
-    :param extended_states_path: Path to /var/lib/apt/extended_states file.
-    :return: Tuple of sets (auto_installed_packages, manual_packages).
-    """
-    auto_installed_packages = set()
-    manual_packages = set()
-    try:
-        with open(extended_states_path, "r", encoding="utf-8") as extended_file:
-            package_name = None
-            auto_installed = None  # None means no info yet
-
-            for line in extended_file:
-                line = line.strip()
-                if line.startswith("Package:"):
-                    package_name = line.split(":")[1].strip()
-                    auto_installed = None  # Reset for the next package
-                elif line.startswith("Auto-Installed:"):
-                    auto_installed = line.split(":")[1].strip() == "1"
-
-                # Add package to the appropriate set at the end of the block
-                if (line == "" or line.startswith("Package:")) and package_name:
-                    if auto_installed is True:
-                        auto_installed_packages.add(package_name)
-                    elif auto_installed is False:  # Explicitly marked as manually installed
-                        manual_packages.add(package_name)
-                    package_name = None
-                    auto_installed = None
-    except FileNotFoundError:
-        logger.error(f"Error: {extended_states_path} not found.")
-    return auto_installed_packages, manual_packages
-
-
-def parse_dpkg_status(dpkg_status_path, manual_packages):
-    """
-    Parses the dpkg status file to extract packages explicitly installed by the user and verified against manual_packages.
+    Parses the dpkg status file to extract packages explicitly installed by the user.
     :param dpkg_status_path: Path to /var/lib/dpkg/status file.
-    :param manual_packages: Set of manually installed package names.
-    :return: List of explicitly installed packages.
+    :param auto_installed_packages: Set of auto-installed package names (from extended_states or other sources).
+    :return: Set of packages explicitly installed by the user.
     """
     explicitly_installed = set()
     try:
@@ -89,16 +52,69 @@ def parse_dpkg_status(dpkg_status_path, manual_packages):
                 elif line.startswith("Status:") and "install ok installed" in line:
                     package_installed = True
 
-                # Add package at the end of block or when reaching a new package
+                # End of package block
                 if (line == "" or line.startswith("Package:")) and package_name:
-                    if package_installed and package_name in manual_packages:
+                    if package_installed and package_name not in auto_installed_packages:
                         explicitly_installed.add(package_name)
                     package_name = None
                     package_installed = False
-        return list(explicitly_installed)
     except FileNotFoundError:
         logger.error(f"Error: {dpkg_status_path} not found.")
-        return []
+    return explicitly_installed
+
+
+def parse_extended_states(extended_states_path):
+    """
+    Parses the extended_states file to get auto-installed and manually installed package information.
+    :param extended_states_path: Path to /var/lib/apt/extended_states file.
+    :return: Set of auto-installed and manually installed packages.
+    """
+    auto_installed_packages = set()
+    manual_packages_from_states = set()
+    try:
+        with open(extended_states_path, "r", encoding="utf-8") as extended_file:
+            package_name = None
+            auto_installed = None  # None means no info yet
+
+            for line in extended_file:
+                line = line.strip()
+                if line.startswith("Package:"):
+                    package_name = line.split(":")[1].strip()
+                    auto_installed = None  # Reset for the next package
+                    print(f"Found package: {package_name}")
+                    # go to the next line to process auto install flag
+                    continue
+                elif line.startswith("Auto-Installed:"):
+                    auto_installed = line.split(":")[1].strip() == "1"
+                    print(f"  Auto-Installed: {auto_installed}")
+
+                # Add package to the appropriate set at the end of the block
+                if (line == "" or line.startswith("Package:")) and package_name:
+                    if auto_installed is None:
+                        # Handle missing Auto-Installed field
+                        manual_packages_from_states.add(package_name)
+                    if auto_installed is True:
+                        auto_installed_packages.add(package_name)
+                        print(f"Added to auto-installed: {package_name}")
+                    elif auto_installed is False:
+                        manual_packages_from_states.add(package_name)
+                        print(f"Added to manually installed: {package_name}")
+                    package_name   = None
+                    auto_installed = None
+
+        # Output the lists in a readable format
+        print("Auto-Installed Packages:")
+        for pkg in sorted(auto_installed_packages):
+            print(f"  - {pkg}")
+
+        print("\nManually Installed Packages (from extended states):")
+        for pkg in sorted(manual_packages_from_states):
+            print(f"  - {pkg}")
+
+    except FileNotFoundError:
+        logger.warning(f"Warning: {extended_states_path} not found. Auto-installed data will be incomplete.")
+
+    return auto_installed_packages, manual_packages_from_states
 
 
 def get_apt_mark_showmanual():
@@ -114,35 +130,34 @@ def get_apt_mark_showmanual():
         return set()
 
 
+def main():
+    dpkg_status_path     = "/var/lib/dpkg/status"
+    extended_states_path = "/var/lib/apt/extended_states"
+
+    # Parse extended_states for auto and manual packages
+    auto_installed_packages, manual_packages_from_states = parse_extended_states(extended_states_path)
+
+    # Parse dpkg status for explicitly installed packages
+    explicitly_installed_packages = parse_dpkg_status(dpkg_status_path, auto_installed_packages)
+
+    # Combine results with apt-mark showmanual
+    apt_mark_manual = get_apt_mark_showmanual()
+    final_explicitly_installed = explicitly_installed_packages.union(manual_packages_from_states, apt_mark_manual)
+
+    # Display results
+    print("Packages explicitly installed by the user:")
+    for pkg in sorted(final_explicitly_installed):
+        print(f"- {pkg}")
+
+    # Optional: Log inconsistencies
+    logger.info("\nCross-checking results...")
+    for pkg in explicitly_installed_packages:
+        if pkg not in apt_mark_manual:
+            logger.warning(f"Package {pkg} detected by the script but not listed by apt-mark showmanual.")
+    for pkg in apt_mark_manual:
+        if pkg not in explicitly_installed_packages:
+            logger.warning(f"Package {pkg} listed by apt-mark showmanual but not detected by the script.")
+
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Parse dpkg status and extended states files.")
-    parser.add_argument('--status', default='/var/lib/dpkg/status', help='Path to dpkg status file')
-    parser.add_argument('--states', default='/var/lib/apt/extended_states', help='Path to extended states file')
-    args = parser.parse_args()
-
-    dpkg_status_path = args.status
-    extended_states_path = args.states
-
-    if os.path.exists(dpkg_status_path) and os.access(dpkg_status_path, os.R_OK):
-        # Get auto-installed and manually installed packages from extended_states
-        auto_installed_packages, manual_packages_from_states = parse_extended_states(extended_states_path)
-        # Get explicitly installed packages from dpkg status
-        user_installed_packages = parse_dpkg_status(dpkg_status_path, auto_installed_packages.union(manual_packages_from_states))
-        # Cross-check with apt-mark showmanual
-        apt_mark_manual = get_apt_mark_showmanual()
-
-        # Print results
-        print("Packages explicitly installed by the user:")
-        for pkg in sorted(user_installed_packages):
-            print(f"- {pkg}")
-
-        # Optional: Compare with apt-mark showmanual and log inconsistencies
-        print("\nCross-checking with apt-mark showmanual...")
-        for pkg in sorted(user_installed_packages):
-            if pkg not in apt_mark_manual:
-                logger.warning(f"Package {pkg} not listed by apt-mark showmanual.")
-        for pkg in sorted(apt_mark_manual):
-            if pkg not in user_installed_packages:
-                logger.warning(f"Package {pkg} listed by apt-mark showmanual but not detected by the script.")
-    else:
-        logger.error(f"{dpkg_status_path} does not exist or is not accessible.")
+    main()
