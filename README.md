@@ -6,11 +6,11 @@
   - Download the .deb Package:
     - Provide a direct URL for the .deb file (from your GitHub release or another host):
     ```bash
-    wget https://github.com/jfprogramming/dpkg-status/releases/download/v1/dpkg-status_1.2_all.deb
+    wget https://github.com/jfprogramming/dpkg-status/releases/download/v1/dpkg-status_1.3_all.deb
     ```
     - Use dpkg to install the package:
     ```bash
-    sudo dpkg -i dpkg-status_1.2_all.deb
+    sudo dpkg -i dpkg-status_1.3_all.deb
     ```
     - Run the Script: You can now run the script:
     ```bash
@@ -323,7 +323,7 @@ The script determines whether a package is explicitly installed by analyzing key
       ```
   - Install local copy of deb package built 
     - ```bash 
-      sudo dpkg -i dpkg-status_1.2_all.deb
+      sudo dpkg -i dpkg-status_1.3_all.deb
       ``` 
   - Remove installed package  
     - ```bash 
@@ -334,11 +334,11 @@ The script determines whether a package is explicitly installed by analyzing key
   - Download the .deb Package:
     - Provide a direct URL for the .deb file (from your GitHub release or another host):
     ```bash
-    wget https://github.com/jfprogramming/dpkg-status/releases/download/v1.2/dpkg-status_1.2_all.deb
+    wget https://github.com/jfprogramming/dpkg-status/releases/download/v1.3/dpkg-status_1.3_all.deb
     ```
     - Use dpkg to install the package:
     ```bash
-    sudo dpkg -i dpkg-status_1.2_all.deb
+    sudo dpkg -i dpkg-status_1.3_all.deb
     ```
     - Run the Script: You can now run the script with:
     ```bash
@@ -352,7 +352,7 @@ The script determines whether a package is explicitly installed by analyzing key
      ```
    - Use dpkg to install the package:
      ```bash 
-     sudo dpkg -i dpkg-status_1.2_all.deb
+     sudo dpkg -i dpkg-status_1.3_all.deb
      ```
    - If there are missing dependencies, fix them using:
      ```bash
@@ -378,7 +378,7 @@ The script determines whether a package is explicitly installed by analyzing key
   - To remove the package and reinstall it:
     ```bash
       sudo dpkg -r dpkg-status
-      sudo dpkg -i dpkg-status_1.2_all.deb
+      sudo dpkg -i dpkg-status_1.3_all.deb
     ```
   - Verify the Installation: Check if the script is now installed:
     ```bash
@@ -453,8 +453,8 @@ c### Releasing a New Version on GitHub
    - Go to the [Releases](https://github.com/jfprogramming/dpkg-status/releases) page.
    - Click **Draft a new release**.
    - Fill in the release details:
-     - **Tag version**: Use the Git tag (e.g., `v1.2`).
-     - **Release title**: Provide a meaningful title (e.g., `Version 1.2`).
+     - **Tag version**: Use the Git tag (e.g., `v1.3`).
+     - **Release title**: Provide a meaningful title (e.g., `Version 1.3`).
      - **Description**: Add release notes detailing the changes.
    - Attach the `.deb` file (e.g., `dpkg-status_<version>_all.deb`).
    - Publish the release.

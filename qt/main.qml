@@ -107,7 +107,7 @@ ApplicationWindow {
             Layout.fillWidth: true
 
             Text {
-                text: "© 2025 DPKG Status Script Viewer App Author: Jesse Finneman"
+                text: "© 2025 DPKG Status Script Viewer App | Author: Jesse Finneman"
                 color: "white"
                 font.pixelSize: 14
                 anchors.centerIn: parent
