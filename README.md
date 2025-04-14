@@ -233,6 +233,102 @@ The script determines whether a package is explicitly installed by analyzing key
 
 ---
 
+## Qt Application: `appdpkg-status`
+
+The `appdpkg-status` is a Qt-based graphical application integrated into the `dpkg-status` package. It provides a user-friendly interface for visualizing the results of the Python script (`dpkg_status.py`). The Qt app is packaged alongside the Python script in the `.deb` package.
+
+### Features of the Qt Application:
+- **Interactive GUI**: Displays the output of `dpkg_status.py` in a tabular format, making it easier to view and analyze the data.
+- **QML Integration**: The frontend is built using QML, offering a modern and responsive user interface.
+- **Seamless Python Integration**: The app internally leverages the `dpkg_status.py` script to fetch and process data.
+- **Cross-platform Compatibility**: Written with Qt6, it supports various Linux environments.
+
+---
+
+### Configuration and File Structure:
+The app's source code and resources are structured as follows:
+```plaintext
+dpkg-status/
+├── qt/
+│   ├── main.cpp                 # Main application entry point
+│   ├── dpkgmodeldata.h/.cpp     # Backend model for data processing
+│   ├── qml/
+│   │   ├── Main.qml             # QML file for the application's UI
+│   ├── resource.qrc             # Qt resource file for embedding resources
+│   ├── CMakeLists.txt           # Build configuration for the Qt app
+```
+  - main.cpp: The C++ entry point that initializes the QML engine and integrates the backend model (dpkgmodeldata). 
+  - Main.qml: Defines the layout and UI elements of the application. 
+  - resource.qrc: Embeds the QML file into the application binary, ensuring it is available at runtime. 
+
+---
+
+### Integration into the .deb Package:
+  - The .deb package includes both the Python script (dpkg_status.py) and the compiled Qt application (appdpkg-status). 
+  - The package installs the Qt app binary to /usr/bin/ and its resources to /usr/share/appdpkg-status/. 
+  - Relevant debian Configuration Files:
+  - debian/install:
+
+  - ```plaintext
+    qt/build/appdpkg-status usr/bin/
+    ```
+  - This ensures the Qt app binary is installed to **/usr/bin/**
+  - debian/rules:
+    - ```bash
+      override_dh_auto_install:
+      mkdir -p debian/dpkg-status/usr/share/appdpkg-status/
+      install -m 0755 qt/build/appdpkg-status debian/dpkg-status/usr/bin/
+      install -m 0644 qt/main.qml debian/dpkg-status/usr/share/appdpkg-status/
+      ```
+    - This installs the Qt app binary and its resources during packaging.
+
+---
+
+### Running the Qt Application:
+  - After installing the .deb package, you can run the Qt application as follows:
+    - Open a terminal and execute:
+    - ```bash
+      appdpkg-status
+      ```
+    - The application will launch, displaying the data parsed by the Python script in a graphical interface.
+    
+---
+
+### How the Qt App and Python Script Work Together:
+  - The *appdpkg-status* Qt application and the dpkg_status.py Python script are designed to work in tandem:
+  - **Backend Processing**:
+    - The dpkg_status.py script parses the /var/lib/dpkg/status file and processes the metadata to determine explicitly installed packages. 
+    - The results are passed to the Qt app's backend model (DpkgModelData) for visualization. 
+  - **Frontend Visualization**:
+    - The Qt app's UI (defined in Main.qml) retrieves the processed data from the backend and displays it in a tabular format.
+    - Users can interact with the data directly in the graphical interface.
+  - **Integration**:
+    - The Python script can also be run independently of the command line, providing flexibility for advanced users. 
+    - The Qt app provides a user-friendly alternative for those who prefer a GUI.
+
+---
+
+## Troubleshooting:
+  - If the Qt app fails to launch or load its QML files:
+    - Ensure all dependencies are installed:
+    - ```bash
+      sudo apt-get install -f
+      ```
+    - Check the installed files:
+      - Verify the binary:
+      - ```bash
+        ls /usr/bin/appdpkg-status
+        ```
+    - Verify the QML file:
+      - ```bash
+        ls /usr/share/appdpkg-status/Main.qml
+        ```
+    - Run the app with debugging enabled:
+      - ```bash
+        QT_DEBUG_PLUGINS=1 appdpkg-status
+        ```
+
+---
 
 ## Creating Debian package to install dpkg-status script
   - Debian packages have a specific directory structure. Organize your project like this:
