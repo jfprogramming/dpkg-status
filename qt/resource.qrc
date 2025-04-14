@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/qt/qml/dpkgstatus">
+    <qresource prefix="/dpkgstatus">
         <file>qml/Main.qml</file>
     </qresource>
 </RCC>

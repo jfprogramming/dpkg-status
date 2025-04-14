@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(dpkg-status VERSION 0.1 LANGUAGES CXX)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Set the build type to Debug by default
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
@@ -10,9 +12,9 @@ endif()
 
 
 # Find required Qt packages
-find_package(Qt6 6.7 REQUIRED COMPONENTS Core Gui Widgets Quick Qml Network DBus)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick Qml Network DBus)
 
-qt_standard_project_setup(REQUIRES 6.7)
+qt_standard_project_setup()
 
 # Add the executable
 qt_add_executable(appdpkg-status

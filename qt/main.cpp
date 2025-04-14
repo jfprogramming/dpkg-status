@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 #endif
 
     // Load QML file from the file system
-    engine.load(QUrl(QStringLiteral("qrc:/qt/qml/dpkgstatus/qml/Main.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:/dpkgstatus/qml/Main.qml")));
     if (engine.rootObjects().isEmpty()) {
         qCritical() << "Failed to load QML file.";
         return -1;
