@@ -1,1 +1,4 @@
-extend-diff-ignore = "qt/build/"
+extend-diff-ignore = qt/build"
+extend-diff-ignore = qt/build/.*
+extend-diff-ignore = qt/build/*
+extend-diff-ignore = .venv/

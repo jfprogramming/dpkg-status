@@ -9,8 +9,7 @@ Homepage: https://github.com/jfprogramming/dpkg-status
 Package: dpkg-status
 Architecture: amd64
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, python3, libqt6core6, libqt6gui6, libqt6widgets6, libqt6quick6, libqt6qml6, libqt6network6, libglx0, libopengl0
-Description: Qt6-based application and Python script to parse dpkg status files on Debian systems
+Description: Qt6-based application and Python script to parse dpkg status
  This package includes:
-  - A Qt6-based application (`appdpkg-status`) to visually display the results of the Python script analysis.
-  - A Python script (`dpkg_status.py`) to determine explicitly installed packages on Debian-based systems by directly
-    accessing the dpkg status file (/var/lib/dpkg/status).
+  - A Qt6-based application (`appdpkg-status`)
+  - A Python script (`dpkg_status.py`) 

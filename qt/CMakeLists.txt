@@ -10,9 +10,9 @@ endif()
 
 
 # Find required Qt packages
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Widgets Quick Qml Network DBus)
+find_package(Qt6 6.7 REQUIRED COMPONENTS Core Gui Widgets Quick Qml Network DBus)
 
-qt_standard_project_setup(REQUIRES 6.5)
+qt_standard_project_setup(REQUIRES 6.7)
 
 # Add the executable
 qt_add_executable(appdpkg-status
