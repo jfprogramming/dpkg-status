@@ -5,7 +5,7 @@ project(dpkg-status VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Find required Qt packages
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Quick Qml Gui)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Widgets Quick Qml Network DBus)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -36,6 +36,11 @@ set_target_properties(appdpkg-status PROPERTIES
 target_link_libraries(appdpkg-status
     PRIVATE Qt6::Core
     PRIVATE Qt6::Gui
+    PRIVATE Qt6::Widgets
+    PRIVATE Qt6::Quick
+    PRIVATE Qt6::Qml
+    PRIVATE Qt6::Network
+    PRIVATE Qt6::DBus
 )
 
 # Install the application
