@@ -1,558 +1,238 @@
-# dpkg-status
+# **dpkg-status**
 
-`dpkg-status` is a Python3 script for parsing and analyzing the `/var/lib/dpkg/status` file on Debian-based systems. The script helps identify packages explicitly installed by the user, excluding dependencies and auto-installed packages.
+`dpkg-status` is a Python3 script for parsing and analyzing the `/var/lib/dpkg/status` file on Debian-based systems. The script identifies packages explicitly installed by the user, excluding dependencies and auto-installed packages.
 
-**Install the `.deb` Package VIA GitHub release and wget cmd.**
-  - Download the .deb Package:
-    - Provide a direct URL for the .deb file (from your GitHub release or another host):
-    ```bash
-    wget https://github.com/jfprogramming/dpkg-status/releases/download/v1/dpkg-status_1.3_all.deb
-    ```
-    - Use dpkg to install the package:
-    ```bash
-    sudo dpkg -i dpkg-status_1.3_all.deb
-    ```
-    - Run the Script: You can now run the script:
-    ```bash
-    dpkg_status.py
-    ```
 ---
 
-## Features:
+## **Table of Contents**
+
+1. [Installation](#installation)
+2. [Features](#features)
+3. [Prerequisites](#prerequisites)
+4. [System Requirements](#system-requirements)
+5. [Project Configuration](#project-configuration)
+6. [Detection Algorithm](#detection-algorithm)
+7. [Notes on Key Files](#notes-on-key-files)
+8. [Qt Application: `appdpkg-status`](#qt-application-appdpkg-status)
+9. [Releases](#releases)
+10. [Troubleshooting](#troubleshooting)
+
+---
+
+## **1. Installation**
+
+### **Option 1: Install `.deb` Package via GitHub Release**
+
+1. Download the `.deb` Package:
+   ```bash
+   wget https://github.com/jfprogramming/dpkg-status/releases/download/v1.3/dpkg-status_1.3_all.deb
+   ```
+
+2. Install the Package:
+   ```bash
+   sudo dpkg -i dpkg-status_1.3_all.deb
+   ```
+
+3. Run the Script:
+   ```bash
+   dpkg_status.py
+   ```
+
+### **Option 2: Install via Cloning the Repository**
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/jfprogramming/dpkg-status.git
+   cd dpkg-status
+   ```
+
+2. Install dependencies and build the `.deb` package:
+   ```bash
+   sudo apt-get install -f
+   sudo dpkg -i dpkg-status_1.3_all.deb
+   ```
+
+---
+
+## **2. Features**
+
 - Parses `/var/lib/dpkg/status` to list explicitly installed packages.
-- Utilizes `/var/lib/apt/extended_states` for auto-installed metadata.
+- Leverages `/var/lib/apt/extended_states` for analyzing auto-installed packages.
 - Optionally integrates with `apt-mark showmanual` for enhanced accuracy.
 
 ---
 
-## Prerequisites:
-To run the script, ensure the following prerequisites are met:
+## **3. Prerequisites**
+
+To successfully run the script, ensure the following prerequisites are met:
+
 1. **Operating System**: Debian-based system (e.g., Debian 12, Ubuntu, Linux Mint).
-2. **Python Version**: Python 3.6 or newer.
+2. **Python**: Version 3.6 or newer.
 3. **Required Files**:
-   - `/var/lib/dpkg/status`: The dpkg status file.
-   - `/var/lib/apt/extended_states`: The extended states file.
-4. **Permissions**:
-   - Read access to `/var/lib/dpkg/status` and `/var/lib/apt/extended_states`.
+   - `/var/lib/dpkg/status`
+   - `/var/lib/apt/extended_states`
+4. **Permissions**: Read access to `/var/lib/dpkg/status` and `/var/lib/apt/extended_states`.
 
 ---
 
-## System Requirements:
-Before running the script, ensure your system meets the following requirements:
-- **Memory**: At least 512 MB RAM.
-- **Disk Space**: Minimal disk space is required, but ensure `/var/lib/dpkg/` and `/var/lib/apt/` are accessible.
-- **Linux Distribution**: This script is designed for Debian-based distributions.
+## **4. System Requirements**
+
+- **Memory**: Minimum 512 MB of RAM.
+- **Disk Space**: Minimal (only requires access to `/var/lib/dpkg/` and `/var/lib/apt/`).
+- **Linux Distribution**: Compatible with all Debian-based distributions.
 
 ---
 
-## Project Configuration:
+## **5. Project Configuration**
+
+Follow these steps to set up the project for development:
+
 1. Clone the repository:
-   - ```bash
-     git clone https://github.com/jfprogramming/dpkg-status.git
-     cd dpkg-status
-   
-2. Set up a virtual environment (optional but recommended):
-   - ```bash
-     python3 -m venv .venv
-     source .venv/bin/activate
+   ```bash
+   git clone https://github.com/jfprogramming/dpkg-status.git
+   cd dpkg-status
+   ```
 
-3. Install dependencies (if required):
-   - ```bash 
-     pip install -r requirements.txt
-     
-4. Running  
-   - ```bash
-     ./dpkg_status.py 
+2. (Optional) Set up a virtual environment:
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   ```
 
----
+3. Install dependencies, if required:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-
-## Detection Algorithm:
-The script determines whether a package is explicitly installed by analyzing key package management files and metadata. It excludes auto-installed packages (dependencies installed as part of another package) and focuses on packages explicitly installed by the user. The process involves the following steps:
-
-1. **Parsing the `/var/lib/dpkg/status` File**:
-   - The script reads the `dpkg status` file line by line.
-   - It extracts information such as package names, statuses, and metadata fields like `Status: install ok installed`.
-
-2. **Filtering Auto-Installed Packages**:
-   - Auto-installed packages are identified by cross-checking with `/var/lib/apt/extended_states`.
-   - Packages with the marker `Auto-Installed: 1` in the `extended_states` file are excluded from the explicitly installed list.
-
-3. **Combining with `apt-mark showmanual`**:
-   - The script optionally integrates with the output of `apt-mark showmanual` to incorporate packages manually marked by the user as installed.
-
-4. **Identifying Explicitly Installed Packages**:
-   - Packages are considered explicitly installed if:
-     - They are marked as `Status: install ok installed` in `/var/lib/dpkg/status`.
-     - They are not listed as auto-installed in `/var/lib/apt/extended_states`.
-     - They are included in the output of `apt-mark showmanual` (if applicable).
-
-5. **Output**:
-   - The script outputs a final list of explicitly installed packages by merging the results from the above steps, ensuring no duplicates.
+4. Run the script:
+   ```bash
+   ./dpkg_status.py
+   ```
 
 ---
 
+## **6. Detection Algorithm**
 
-## Notes:
-  - **File: /var/lib/dpkg/status**
-    - This file is part of the dpkg system, which is the backend package manager used by Debian-based systems.
-    It serves as the central database of installed packages.
-    Tracks every package installed on the system, along with its metadata.
+The script determines explicitly installed packages by analyzing various system files. It follows these steps:
 
+1. **Parse `/var/lib/dpkg/status`**:
+   - Extract package names, statuses, and metadata (e.g., `Status: install ok installed`).
 
-  - **File: /var/lib/apt/extended_states**
-    - This file is used by the APT package manager to track extra information about packages, specifically their installation status.
-    - Tracks whether a package was Auto-installed as a dependency (Auto-Installed: 1).
-    - Not explicitly marked as auto-installed (field absent or Auto-Installed: 0).
-    - Helps determine which packages were installed automatically as dependencies.
-    
+2. **Filter Auto-Installed Packages**:
+   - Checks `/var/lib/apt/extended_states` for `Auto-Installed: 1` markers and excludes those packages.
 
-  **Note**: On Debian-based systems, APT maintains logs that record package installations, upgrades, and removals. 
-    
-  **Here are the key log files:**
+3. **Compare with `apt-mark showmanual`** *(optional)*:
+   - Includes packages manually marked as installed via `apt-mark`.
 
-  - **File: /var/log/dpkg.log**
-    - Tracks all package management actions performed by dpkg, including those initiated by apt.
-    - Logs package installations, removals, and upgrades.
-    
+4. **Identify Explicitly Installed Packages**:
+   - Packages are explicitly installed if:
+     - `Status: install ok installed` in `/var/lib/dpkg/status`.
+     - Not listed as `Auto-Installed: 1` in `/var/lib/apt/extended_states`.
+     - Included in `apt-mark showmanual` output (if applicable).
 
-  - **File: /var/log/apt/term.log**
-    - Logs detailed terminal output for apt commands.
-    - Includes verbose information about package downloads, installations, and configurations.
-    
-
-  - **File: /var/log/apt/history.log**
-    - Tracks high-level actions performed by apt, such as package installations, upgrades, and removals.
-    - Records the command used (e.g., apt install) and the list of affected packages.
-
+5. **Final Output**:
+   - Outputs a deduplicated list of explicitly installed packages.
 
 ---
 
-## Example file contents:
+## **7. Notes on Key Files**
 
-1. **File:`/var/lib/dpkg/status`**:
-  ```plaintext
-  Package: adwaita-icon-theme
-  Status: install ok installed
-  Priority: optional
-  Section: gnome
-  Installed-Size: 5234
-  Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-  Architecture: all
-  Multi-Arch: foreign
-  Version: 41.0-1ubuntu1
-  Replaces: adwaita-icon-theme-full (<< 41.0-1ubuntu1), gnome-themes-standard-data (<< 3.18.0-2~)
-  Depends: hicolor-icon-theme, gtk-update-icon-cache, ubuntu-mono | adwaita-icon-theme-full
-  Recommends: librsvg2-common
-  Breaks: adwaita-icon-theme-full (<< 41.0-1ubuntu1), gnome-themes-standard-data (<< 3.18.0-2~)
-  Description: default icon theme of GNOME (small subset)
-  This package contains the default icon theme used by the GNOME desktop.
-  The icons are used in many of the official GNOME applications like eog,
-  evince, system monitor, and many more.
-  .
-  This package only contains a small subset of the original GNOME icons which
-  are not provided by the Humanity icon theme, to avoid installing many
-  duplicated icons. Please install adwaita-icon-theme-full if you want the full set.
-  Original-Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
-  
-  Package: aglfn
-  Status: install ok installed
-  Priority: optional
-  Section: fonts
-  Installed-Size: 123
-  Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-  Architecture: all
-  Multi-Arch: foreign
-  Version: 1.7+git20191031.4036a9c-2
-  Description: Adobe Glyph List For New Fonts
-  AGL (Adobe Glyph List) maps glyph names to Unicode values for the
-  purpose of deriving content. AGLFN (Adobe Glyph List For New Fonts) is a
-  subset of AGL that excludes the glyph names associated with the PUA
-  (Private Use Area), and is meant to specify preferred glyph names for
-  new fonts. Also included is the ITC Zapf Dingbats Glyph List, which is
-  similar to AGL in that it maps glyph names to Unicode values for the
-  purpose of deriving content, but only for the glyphs in the ITC Zapf
-  Dingbats font.
-  .
-  Be sure to visit the AGL Specification and Developer Documentation pages
-  for detailed information about naming glyphs, interpreting glyph names,
-  and developing OpenType fonts.
-  Original-Maintainer: Debian Fonts Task Force <pkg-fonts-devel@lists.alioth.debian.org>
-  Homepage: https://github.com/adobe-type-tools/agl-aglfn
-  
-  Package: aisleriot
-  Status: install ok installed
-  Priority: optional
-  Section: games
-  Installed-Size: 8808
-  Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-  Architecture: amd64
-  Version: 1:3.22.22-1
-  Depends: dconf-gsettings-backend | gsettings-backend, guile-2.2-libs, libatk1.0-0 (>= 1.12.4), libc6 (>= 2.34), libcairo2 (>= 1.10.0), libcanberra-gtk3-0 (>= 0.25), libcanberra0 (>= 0.2), libgdk-pixbuf-2.0-0 (>= 2.22.0), libglib2.0-0 (>= 2.37.3), libgtk-3-0 (>= 3.19.12), librsvg2-2 (>= 2.32.0)
-  Recommends: yelp
-  Suggests: gnome-cards-data
-  Description: GNOME solitaire card game collection
-  This is a collection of over eighty different
+### **/var/lib/dpkg/status**
+- Tracks every package installed on the system, along with its metadata.
+- Acts as the backend database for Debian's `dpkg` package manager.
+
+### **/var/lib/apt/extended_states**
+- Used by APT to track extra metadata (e.g., whether a package is auto-installed as a dependency).
+- Packages with `Auto-Installed: 1` are considered dependencies.
+
+### **APT Log Files**
+- `/var/log/apt/history.log`: Details high-level actions (installations, upgrades, removals).
+- `/var/log/apt/term.log`: Tracks detailed command outputs.
+- `/var/log/dpkg.log`: Logs actions performed by `dpkg` directly.
+
+---
+
+## **8. Qt Application: `appdpkg-status`**
+
+`appdpkg-status` is an optional Qt-based GUI for visualizing the Python script's output.
+
+### **Features**:
+- Displays parsed results in an interactive table.
+- Responsive UI built with QML for modern design.
+- Pre-integrated with `dpkg_status.py` for seamless backend processing.
+
+### **Running the Qt App**:
+1. After installing the `.deb` package:
+   ```bash
+   appdpkg-status
+   ```
+
+2. Debugging:
+   - If the application doesn't run, enable debugging:
+     ```bash
+     QT_DEBUG_PLUGINS=1 appdpkg-status
+     ```
+
+---
+
+## **9. Releases**
+
+### **Creating a `.deb` Package**:
+1. Set up the project directory structure:
+   ```plaintext
+   dpkg-status/
+   ├── debian/
+   │   ├── control
+   │   ├── changelog
+   │   ├── copyright
+   │   ├── rules
+   │   ├── install
+   │   ├── compat
+   ├── src/
+   │   ├── dpkg_status.py
+   ├── releases/
+   │   ├── dpkg-status_<version>_all.deb
+   ├── README.md
+   ```
+
+2. Build the package:
+   ```bash
+   debuild -us -uc
+   ```
+
+3. Verify the package:
+   ```bash
+   lintian ../dpkg-status_<version>_all.deb
+   ```
+
+4. Publish on GitHub:
+   - Attach the `.deb` package to a GitHub release with appropriate release notes.
+
+---
+
+## **10. Troubleshooting**
+
+### **General Issues**:
+- **Missing Dependencies**:
+  ```bash
+  sudo apt-get install -f
   ```
 
-
-2. **File: `/var/lib/apt/extended_states`**: 
-  ```plaintext
-  Package: libtraceevent1
-  Architecture: amd64
-  Auto-Installed: 1
-
-  Package: linux-hwe-6.8-headers-6.8.0-57
-  Architecture: amd64
-  Auto-Installed: 1
-
-  Package: linux-modules-6.8.0-57-generic
-  Architecture: amd64
-  Auto-Installed: 1
-
-  Package: linux-hwe-6.8-tools-6.8.0-57
-  Architecture: amd64
-  Auto-Installed: 1
-
-  Package: linux-image-6.8.0-57-generic
-  Architecture: amd64
-  Auto-Installed: 1
-
-  Package: linux-headers-6.8.0-57-generic
-  Architecture: amd64
-  Auto-Installed: 1
-
-  Package: linux-tools-6.8.0-57-generic
-  Architecture: amd64
-  Auto-Installed: 1
-
-   Package: linux-modules-extra-6.8.0-57-generic
-  Architecture: amd64
-  Auto-Installed: 1
+- **Reinstall the Package**:
+  ```bash
+  sudo dpkg -r dpkg-status
+  sudo dpkg -i dpkg-status_1.3_all.deb
   ```
 
----
+### **Debugging Installation**:
+1. Enable debug logging:
+   ```python
+   logging.basicConfig(level=logging.DEBUG)
+   ```
 
-## Qt Application: `appdpkg-status`
-
-The `appdpkg-status` is a Qt-based graphical application integrated into the `dpkg-status` package. It provides a user-friendly interface for visualizing the results of the Python script (`dpkg_status.py`). The Qt app is packaged alongside the Python script in the `.deb` package.
-
-### Features of the Qt Application:
-- **Interactive GUI**: Displays the output of `dpkg_status.py` in a tabular format, making it easier to view and analyze the data.
-- **QML Integration**: The frontend is built using QML, offering a modern and responsive user interface.
-- **Seamless Python Integration**: The app internally leverages the `dpkg_status.py` script to fetch and process data.
-- **Cross-platform Compatibility**: Written with Qt6, it supports various Linux environments.
-
----
-
-### Configuration and File Structure:
-The app's source code and resources are structured as follows:
-```plaintext
-dpkg-status/
-├── qt/
-│   ├── main.cpp                 # Main application entry point
-│   ├── dpkgmodeldata.h/.cpp     # Backend model for data processing
-│   ├── qml/
-│   │   ├── Main.qml             # QML file for the application's UI
-│   ├── resource.qrc             # Qt resource file for embedding resources
-│   ├── CMakeLists.txt           # Build configuration for the Qt app
-```
-  - main.cpp: The C++ entry point that initializes the QML engine and integrates the backend model (dpkgmodeldata). 
-  - Main.qml: Defines the layout and UI elements of the application. 
-  - resource.qrc: Embeds the QML file into the application binary, ensuring it is available at runtime. 
-
----
-
-### Integration into the .deb Package:
-  - The .deb package includes both the Python script (dpkg_status.py) and the compiled Qt application (appdpkg-status). 
-  - The package installs the Qt app binary to /usr/bin/ and its resources to /usr/share/appdpkg-status/. 
-  - Relevant debian Configuration Files:
-  - debian/install:
-
-  - ```plaintext
-    qt/build/appdpkg-status usr/bin/
-    ```
-  - This ensures the Qt app binary is installed to **/usr/bin/**
-  - debian/rules:
-    - ```bash
-      override_dh_auto_install:
-      mkdir -p debian/dpkg-status/usr/share/appdpkg-status/
-      install -m 0755 qt/build/appdpkg-status debian/dpkg-status/usr/bin/
-      install -m 0644 qt/main.qml debian/dpkg-status/usr/share/appdpkg-status/
-      ```
-    - This installs the Qt app binary and its resources during packaging.
-
----
-
-### Running the Qt Application:
-  - After installing the .deb package, you can run the Qt application as follows:
-    - Open a terminal and execute:
-    - ```bash
-      appdpkg-status
-      ```
-    - The application will launch, displaying the data parsed by the Python script in a graphical interface.
-    
----
-
-### How the Qt App and Python Script Work Together:
-  - The *appdpkg-status* Qt application and the dpkg_status.py Python script are designed to work in tandem:
-  - **Backend Processing**:
-    - The dpkg_status.py script parses the /var/lib/dpkg/status file and processes the metadata to determine explicitly installed packages. 
-    - The results are passed to the Qt app's backend model (DpkgModelData) for visualization. 
-  - **Frontend Visualization**:
-    - The Qt app's UI (defined in Main.qml) retrieves the processed data from the backend and displays it in a tabular format.
-    - Users can interact with the data directly in the graphical interface.
-  - **Integration**:
-    - The Python script can also be run independently of the command line, providing flexibility for advanced users. 
-    - The Qt app provides a user-friendly alternative for those who prefer a GUI.
-
----
-
-## Troubleshooting:
-  - If the Qt app fails to launch or load its QML files:
-    - Ensure all dependencies are installed:
-    - ```bash
-      sudo apt-get install -f
-      ```
-    - Check the installed files:
-      - Verify the binary:
-      - ```bash
-        ls /usr/bin/appdpkg-status
-        ```
-    - Verify the QML file:
-      - ```bash
-        ls /usr/share/appdpkg-status/Main.qml
-        ```
-    - Run the app with debugging enabled:
-      - ```bash
-        QT_DEBUG_PLUGINS=1 appdpkg-status
-        ```
-
----
-
-## Creating Debian package to install dpkg-status script
-  - Debian packages have a specific directory structure. Organize your project like this:
-
-    ```plaintext
-    dpkg-status/                    # Root directory of your project
-    ├── debian/                     # Contains files needed for building the package
-    │   ├── control                 # Metadata about the package
-    │   ├── changelog               # Change history for the package
-    │   ├── copyright               # Licensing information
-    │   ├── rules                   # Instructions for building the package
-    │   ├── install                 # Files to be installed and their destinations
-    │   ├── compat                  # Debhelper compatibility level
-    ├── src/                        # Python source code
-    │   ├── dpkg_status.py          # Main program script
-    ├── tests/                      # Python Unit Tests source code
-    │   ├── test_dpkg_status.py     # Unit test script
-    ├── releases/                   # Release folder
-    │   ├── dpkg-status_1.1_all.deb # Custom built deb package containing python script
-    ├── README.md                   # Project documentation
-    ```
-1. **Create the debian/ Directory**
-  - This directory contains all the files required to build a Debian package.
-  - Required Files:
-    - **Control** - This defines the package metadata. 
-      - Create a file named control in the **debian/** directory with the following content:
-      - ```plaintext 
-        Source: dpkg-status
-        Section: utils
-        Priority: optional
-        Maintainer: Your Name <your.email@example.com>
-        Build-Depends: debhelper-compat (= 13), python3
-        Standards-Version: 4.5.0
-        Homepage: https://github.com/jfprogramming/dpkg-status
-
-        Package: dpkg-status
-        Architecture: all
-        Depends: ${python3:Depends}, ${misc:Depends}
-        Description: A Python script to parse dpkg status files on Debian systems.
-        This script determines explicitly installed packages on Debian-based systems.
-        ```
-    - **Changelog** - Document the changes made to your package. 
-      - Use the **dch** command to create and manage the changelog:
-      - ```bash 
-        dch --create --package dpkg-status --newversion 1.1 --distribution unstable
-        ```
-        
-2. **Copyright**
-  - Add licensing information. Example:
-  - ```plaintext 
-    Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-    Upstream-Name: dpkg-status
-    Source: https://github.com/jfprogramming/dpkg-status
-
-    Files: *
-    Copyright: 2025 Your Name <your.email@example.com>
-    License: MIT
-    ```
-    
-3. **Rules**
-  - Instructions for building the package. Example:
-  - ```bash
-    #!/usr/bin/make -f
-    %:
-	dh $@
-    ```
-4. **compat**
-  - Specify the debhelper compatibility level. 
-  - Add this file with the following content:
-  - ```plaintext 
-    13
-    ```
-    
-5. **Build the deb package**
-  - Run the following command to build the deb package 
-    - ```bash 
-      debuild -us -uc
-      ```
-      
-  - verify deb package built 
-    - ```bash 
-      lintian ../dpkg-status_1.1_all.deb
-      ``` 
-      
-  - Clean and rebuild 
-    - ```bash
-      fakeroot debian/rules clean
-      ```
-  - Install local copy of deb package built 
-    - ```bash 
-      sudo dpkg -i dpkg-status_1.3_all.deb
-      ``` 
-  - Remove installed package  
-    - ```bash 
-      sudo dpkg -r dpkg-status
-      ```  
-
-6. **Install the `.deb` Package VIA GitHub release and Wget**
-  - Download the .deb Package:
-    - Provide a direct URL for the .deb file (from your GitHub release or another host):
-    ```bash
-    wget https://github.com/jfprogramming/dpkg-status/releases/download/v1.3/dpkg-status_1.3_all.deb
-    ```
-    - Use dpkg to install the package:
-    ```bash
-    sudo dpkg -i dpkg-status_1.3_all.deb
-    ```
-    - Run the Script: You can now run the script with:
-    ```bash
-    dpkg_status.py
-    ```
-
-7. **Install the `.deb` Package by cloning repo**
-   - Navigate to the directory where the `.deb` package is located:
-      ```bash
-      cd ~/PycharmProjects/dpkg-status
-     ```
-   - Use dpkg to install the package:
-     ```bash 
-     sudo dpkg -i dpkg-status_1.3_all.deb
-     ```
-   - If there are missing dependencies, fix them using:
-     ```bash
-      sudo apt-get install -f
-     ```
-   - Run the Script
-     - Confirm the script is installed in /usr/bin:
-     ```bash
-      ls /usr/bin/dpkg_status.py
-     ```
-   - Run the script directly:
-     ```bash
-      dpkg_status.py
-     ```
-  
----
-
-   
-## **Debugging Installation Issues**
-  - Enable verbose debugging out put switch logging level from **INFO** to **DEBUG**
-    - logging.basicConfig(level=logging.DEBUG)
-  - If the installation fails, check for errors in the terminal and resolve them.
-  - To remove the package and reinstall it:
-    ```bash
-      sudo dpkg -r dpkg-status
-      sudo dpkg -i dpkg-status_1.3_all.deb
-    ```
-  - Verify the Installation: Check if the script is now installed:
-    ```bash
-    ls /usr/bin/dpkg_status.py
-    ```
-  - If the output shows /usr/bin/dpkg_status, the script has been successfully renamed. 
-  - Run the Script: You can now run the script without the .py extension:
-    ```bash
-    dpkg_status.py
-    ```
-
----
-
-
-## Releases
-
-### Creating a New `.deb` Package
-Follow these steps to create and package the latest version of `dpkg-status`:
-
-1. **Set Up the Project Directory**:
-   - Ensure your project directory follows this structure:
-     ```plaintext
-     dpkg-status/
-     ├── debian/
-     │   ├── control
-     │   ├── changelog
-     │   ├── copyright
-     │   ├── rules
-     │   ├── install
-     │   ├── compat
-     ├── src/
-     │   ├── dpkg_status.py
-     ├── releases/
-     │   ├── dpkg-status_<version>_all.deb
-     ├── README.md
-     ```
-
-2. **Prepare the `debian` Directory**:
-   - Update the `control` file with the new version details.
-   - Use the `dch` command to log changes for the release:
-     ```bash
-     dch --create --package dpkg-status --newversion <new-version> --distribution unstable
-     ```
-
-3. **Build the Package**:
-   - Run the following command to create the `.deb` package:
-     ```bash
-     debuild -us -uc
-     ```
-
-4. **Verify the Package**:
-   - Use Lintian to check for any issues:
-     ```bash
-     lintian ../dpkg-status_<version>_all.deb
-     ```
-
-5. **Clean and Rebuild**:
-   - If needed, clean the build directory:
-     ```bash
-     fakeroot debian/rules clean
-     ```
-c### Releasing a New Version on GitHub
-
-1. **Create a Git Tag**:
-   - Tag the new release version in Git:
-     ```bash
-     git tag -a v<version> -m "Release version <version>"
-     git push origin v<version>
-     ```
-
-2. **Draft a GitHub Release**:
-   - Go to the [Releases](https://github.com/jfprogramming/dpkg-status/releases) page.
-   - Click **Draft a new release**.
-   - Fill in the release details:
-     - **Tag version**: Use the Git tag (e.g., `v1.3`).
-     - **Release title**: Provide a meaningful title (e.g., `Version 1.3`).
-     - **Description**: Add release notes detailing the changes.
-   - Attach the `.deb` file (e.g., `dpkg-status_<version>_all.deb`).
-   - Publish the release.
+2. Verify installed script:
+   ```bash
+   ls /usr/bin/dpkg_status.py
+   ```
 
 ---
