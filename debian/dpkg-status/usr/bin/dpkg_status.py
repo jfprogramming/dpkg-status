@@ -163,9 +163,9 @@ def main():
     # Get the list of packages returned by apt-mark showmanual
     apt_mark_manual = get_apt_mark_showmanual()
 
-    # Convert set for list of displaying to console in one line
+    # Convert set to list for displaying to console in one line for easier debugging
     explicitly_installed_list = list(explicitly_installed_packages)
-    print(f"explicitly_installed_list: {explicitly_installed_list}")
+    logger.debug(f"explicitly_installed_list: {explicitly_installed_list}")
 
     # Save results to a file and display them
     output_file = "explicitly_installed_packages.txt"

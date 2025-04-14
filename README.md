@@ -64,6 +64,9 @@ Before running the script, ensure your system meets the following requirements:
    - ```bash
      ./dpkg_status.py 
 
+---
+
+
 ## Detection Algorithm:
 The script determines whether a package is explicitly installed by analyzing key package management files and metadata. It excludes auto-installed packages (dependencies installed as part of another package) and focuses on packages explicitly installed by the user. The process involves the following steps:
 
@@ -86,6 +89,9 @@ The script determines whether a package is explicitly installed by analyzing key
 
 5. **Output**:
    - The script outputs a final list of explicitly installed packages by merging the results from the above steps, ensuring no duplicates.
+
+---
+
 
 ## Notes:
   - **File: /var/lib/dpkg/status**
@@ -118,6 +124,9 @@ The script determines whether a package is explicitly installed by analyzing key
   - **File: /var/log/apt/history.log**
     - Tracks high-level actions performed by apt, such as package installations, upgrades, and removals.
     - Records the command used (e.g., apt install) and the list of affected packages.
+
+
+---
 
 ## Example file contents:
 
@@ -222,6 +231,9 @@ The script determines whether a package is explicitly installed by analyzing key
   Auto-Installed: 1
   ```
 
+---
+
+
 ## Creating Debian package to install dpkg-status script
   - Debian packages have a specific directory structure. Organize your project like this:
 
@@ -242,7 +254,7 @@ The script determines whether a package is explicitly installed by analyzing key
     │   ├── dpkg-status_1.1_all.deb # Custom built deb package containing python script
     ├── README.md                   # Project documentation
     ```
-2. **Create the debian/ Directory**
+1. **Create the debian/ Directory**
   - This directory contains all the files required to build a Debian package.
   - Required Files:
     - **Control** - This defines the package metadata. 
@@ -268,7 +280,7 @@ The script determines whether a package is explicitly installed by analyzing key
         dch --create --package dpkg-status --newversion 1.1 --distribution unstable
         ```
         
-3. **Copyright**
+2. **Copyright**
   - Add licensing information. Example:
   - ```plaintext 
     Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
@@ -280,21 +292,21 @@ The script determines whether a package is explicitly installed by analyzing key
     License: MIT
     ```
     
-4. **Rules**
+3. **Rules**
   - Instructions for building the package. Example:
   - ```bash
     #!/usr/bin/make -f
     %:
 	dh $@
     ```
-5. **compat**
+4. **compat**
   - Specify the debhelper compatibility level. 
   - Add this file with the following content:
   - ```plaintext 
     13
     ```
     
-6. **Build the deb package**
+5. **Build the deb package**
   - Run the following command to build the deb package 
     - ```bash 
       debuild -us -uc
@@ -318,7 +330,7 @@ The script determines whether a package is explicitly installed by analyzing key
       sudo dpkg -r dpkg-status
       ```  
 
-7. **Install the `.deb` Package VIA GitHub release and Wget**
+6. **Install the `.deb` Package VIA GitHub release and Wget**
   - Download the .deb Package:
     - Provide a direct URL for the .deb file (from your GitHub release or another host):
     ```bash
@@ -332,8 +344,8 @@ The script determines whether a package is explicitly installed by analyzing key
     ```bash
     dpkg_status.py
     ```
-    
-8. **Install the `.deb` Package by cloning repo**
+
+7. **Install the `.deb` Package by cloning repo**
    - Navigate to the directory where the `.deb` package is located:
       ```bash
       cd ~/PycharmProjects/dpkg-status
@@ -355,7 +367,10 @@ The script determines whether a package is explicitly installed by analyzing key
      ```bash
       dpkg_status.py
      ```
-     
+  
+---
+
+   
 ## **Debugging Installation Issues**
   - Enable verbose debugging out put switch logging level from **INFO** to **DEBUG**
     - logging.basicConfig(level=logging.DEBUG)
@@ -375,3 +390,73 @@ The script determines whether a package is explicitly installed by analyzing key
     dpkg_status.py
     ```
 
+---
+
+
+## Releases
+
+### Creating a New `.deb` Package
+Follow these steps to create and package the latest version of `dpkg-status`:
+
+1. **Set Up the Project Directory**:
+   - Ensure your project directory follows this structure:
+     ```plaintext
+     dpkg-status/
+     ├── debian/
+     │   ├── control
+     │   ├── changelog
+     │   ├── copyright
+     │   ├── rules
+     │   ├── install
+     │   ├── compat
+     ├── src/
+     │   ├── dpkg_status.py
+     ├── releases/
+     │   ├── dpkg-status_<version>_all.deb
+     ├── README.md
+     ```
+
+2. **Prepare the `debian` Directory**:
+   - Update the `control` file with the new version details.
+   - Use the `dch` command to log changes for the release:
+     ```bash
+     dch --create --package dpkg-status --newversion <new-version> --distribution unstable
+     ```
+
+3. **Build the Package**:
+   - Run the following command to create the `.deb` package:
+     ```bash
+     debuild -us -uc
+     ```
+
+4. **Verify the Package**:
+   - Use Lintian to check for any issues:
+     ```bash
+     lintian ../dpkg-status_<version>_all.deb
+     ```
+
+5. **Clean and Rebuild**:
+   - If needed, clean the build directory:
+     ```bash
+     fakeroot debian/rules clean
+     ```
+c### Releasing a New Version on GitHub
+
+1. **Create a Git Tag**:
+   - Tag the new release version in Git:
+     ```bash
+     git tag -a v<version> -m "Release version <version>"
+     git push origin v<version>
+     ```
+
+2. **Draft a GitHub Release**:
+   - Go to the [Releases](https://github.com/jfprogramming/dpkg-status/releases) page.
+   - Click **Draft a new release**.
+   - Fill in the release details:
+     - **Tag version**: Use the Git tag (e.g., `v1.2`).
+     - **Release title**: Provide a meaningful title (e.g., `Version 1.2`).
+     - **Description**: Add release notes detailing the changes.
+   - Attach the `.deb` file (e.g., `dpkg-status_<version>_all.deb`).
+   - Publish the release.
+
+---
