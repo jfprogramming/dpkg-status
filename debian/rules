@@ -16,4 +16,4 @@ override_dh_auto_install:
 	mkdir -p debian/dpkg-status/usr/bin/
 	install -m 0755 qt/build/appdpkg-status debian/dpkg-status/usr/bin/
 	mkdir -p debian/dpkg-status/usr/share/appdpkg-status/
-	install -m 0644 qt/main.qml debian/dpkg-status/usr/share/appdpkg-status/
+	install -m 0644 qt/qml/Main.qml debian/dpkg-status/usr/share/appdpkg-status/
