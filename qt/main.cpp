@@ -6,6 +6,8 @@
 #include <QDirIterator>
 #include "dpkgmodeldata.h"
 
+// un-comment to check system resources
+//#define QT_DEBUG
 
 int main(int argc, char *argv[])
 {
@@ -16,6 +18,13 @@ int main(int argc, char *argv[])
     // Register the DpkgModelData class with QML
     DpkgModelData tableModel;
     engine.rootContext()->setContextProperty("tableModel", &tableModel);
+
+#ifdef QT_DEBUG
+    QDirIterator it(":", QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        qDebug() << "Available Resource:" << it.next();
+    }
+#endif
 
     // Load QML file from the file system
     engine.load(QUrl(QStringLiteral("qrc:/qt/qml/dpkgstatus/qml/Main.qml")));
