@@ -8,7 +8,7 @@ Homepage: https://github.com/jfprogramming/dpkg-status
 
 Package: dpkg-status
 Architecture: amd64
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, python3, libqt6core6 (>= 6.7.0), libqt6gui6 (>= 6.7.0), libqt6widgets6 (>= 6.7.0), libqt6quick6 (>= 6.7.0), libqt6qml6 (>= 6.7.0), libqt6network6 (>= 6.7.0), libglx0, libopengl0, qt6-base-dev
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, python3, libqt6core6 (>= 6.0), libqt6gui6 (>= 6.0), libqt6widgets6 (>= 6.0), libqt6quick6 (>= 6.0), libqt6qml6 (>= 6.0), libqt6network6 (>= 6.0), libglx0, libopengl0, qt6-base-dev (>= 6.0)
 Description: Qt6-based application and Python script to parse dpkg status
  This package includes:
   - A Qt6-based application (`appdpkg-status`)
