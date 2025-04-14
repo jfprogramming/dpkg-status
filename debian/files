@@ -1,0 +1,3 @@
+dpkg-status-dbgsym_1.4_amd64.ddeb debug optional automatic=yes
+dpkg-status_1.4_amd64.buildinfo utils optional
+dpkg-status_1.4_amd64.deb utils optional

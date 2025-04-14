@@ -1,2 +1,1 @@
 src/dpkg_status.py usr/bin/
-qt/build/appdpkg-status usr/bin/
