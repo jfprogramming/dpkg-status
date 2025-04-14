@@ -12,11 +12,8 @@ override_dh_clean:
 clean:
 	dh_clean
 
-override_dh_auto_build:
-	mkdir -p qt/build
-	cd qt/build && cmake .. -DCMAKE_BUILD_TYPE=Release
-	cd qt/build && cmake --build .
-
 override_dh_auto_install:
 	mkdir -p debian/dpkg-status/usr/bin/
 	install -m 0755 qt/build/appdpkg-status debian/dpkg-status/usr/bin/
+	mkdir -p debian/dpkg-status/usr/share/appdpkg-status/
+	install -m 0644 qt/main.qml debian/dpkg-status/usr/share/appdpkg-status/

@@ -17,16 +17,18 @@ qt_standard_project_setup(REQUIRES 6.7)
 # Add the executable
 qt_add_executable(appdpkg-status
     main.cpp
-    dpkgmodeldata.h
-    dpkgmodeldata.cpp
 )
 
-# Add the QML module
 qt_add_qml_module(appdpkg-status
     URI dpkgstatus
     VERSION 1.0
+    SOURCES
+        dpkgmodeldata.h
+        dpkgmodeldata.cpp
     QML_FILES
-        main.qml
+        qml/Main.qml
+    RESOURCES
+        resource.qrc
 )
 
 # Set target properties for bundle/executable
