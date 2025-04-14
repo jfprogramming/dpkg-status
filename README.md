@@ -226,7 +226,7 @@ The script determines explicitly installed packages by analyzing various system 
 
 ### **Debugging Installation**:
 1. Enable debug logging:
-   ```python
+   ```plaintext
    logging.basicConfig(level=logging.DEBUG)
    ```
 
