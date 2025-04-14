@@ -180,3 +180,27 @@ qtcreator/*.pro.user
 # Ignore specific directories
 qt/build/
 build/
+
+# Ignore build artifacts
+qt/build/
+
+# Ignore Python virtual environment
+.venv/
+
+# Ignore Debian package artifacts
+debian/*.debhelper/
+debian/dpkg-status/
+
+# Ignore compiled binaries and debug files
+*.bin
+*.debug
+*.ddeb
+
+# Ignore CMake build files
+CMakeCache.txt
+CMakeFiles/
+
+# Ignore temporary files
+*.tmp
+*.log
+*.swp

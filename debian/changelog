@@ -1,3 +1,9 @@
+dpkg-status (1.5) stable; urgency=medium
+
+  * Updated for stable release
+
+ -- Jesse Finneman <jfprogramming@yahoo.com>  Mon, 14 Apr 2025 00:06:53 -0600
+
 dpkg-status (1.4) unstable; urgency=medium
 
   * Added a Qt-based application (`dpkgviewer`) to visually display the results of the Python script.
