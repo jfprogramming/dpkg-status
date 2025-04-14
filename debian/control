@@ -2,14 +2,15 @@ Source: dpkg-status
 Section: utils
 Priority: optional
 Maintainer: Jesse Finneman <jfprogramming@yahoo.com>
-Build-Depends: debhelper-compat (= 13), dh-python, python3, qtbase5-dev, qtdeclarative5-dev
+Build-Depends: debhelper-compat (= 13), dh-python, python3, qt6-base-dev, qt6-declarative-dev, cmake
 Standards-Version: 4.5.0
 Homepage: https://github.com/jfprogramming/dpkg-status
 
 Package: dpkg-status
 Architecture: amd64
-Depends: ${shlibs:Depends}, ${misc:Depends}, python3, libqt5core5a, libqt5gui5, libqt5widgets5, qml-module-qtquick2, qml-module-qtquick-controls2
-Description: Qt-based application and Python script to parse dpkg status files on Debian systems
- This package includes a Qt-based application (`dpkgviewer`) to visually display the results of the Python script analysis. 
- Additionally, the Python script (`dpkg_status.py`) determines explicitly installed packages on Debian-based systems by 
- directly accessing the dpkg status file (/var/lib/dpkg/status).
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, python3, libqt6core6, libqt6gui6, libqt6quick6, libqt6network6, libglx0, libopengl0
+Description: Qt6-based application and Python script to parse dpkg status files on Debian systems
+ This package includes:
+  - A Qt6-based application (`appdpkg-status`) to visually display the results of the Python script analysis.
+  - A Python script (`dpkg_status.py`) to determine explicitly installed packages on Debian-based systems by directly
+    accessing the dpkg status file (/var/lib/dpkg/status).

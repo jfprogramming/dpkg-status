@@ -35,8 +35,6 @@ set_target_properties(appdpkg-status PROPERTIES
 # Link required libraries
 target_link_libraries(appdpkg-status
     PRIVATE Qt6::Core
-    PRIVATE Qt6::Quick
-    PRIVATE Qt6::Qml
     PRIVATE Qt6::Gui
 )
 
