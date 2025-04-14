@@ -25,12 +25,12 @@
 
 1. Download the `.deb` Package:
    ```bash
-   wget https://github.com/jfprogramming/dpkg-status/releases/download/v1.3/dpkg-status_1.3_all.deb
+   wget https://github.com/jfprogramming/dpkg-status/releases/download/v1.4/dpkg-status_1.4_amd64.deb
    ```
 
 2. Install the Package:
    ```bash
-   sudo dpkg -i dpkg-status_1.3_all.deb
+   sudo dpkg -i dpkg-status_1.4_amd64.deb
    ```
 
 3. Run the Script:
@@ -49,7 +49,7 @@
 2. Install dependencies and build the `.deb` package:
    ```bash
    sudo apt-get install -f
-   sudo dpkg -i dpkg-status_1.3_all.deb
+   sudo dpkg -i dpkg-status_1.4_amd64.deb
    ```
 
 ---
@@ -221,7 +221,7 @@ The script determines explicitly installed packages by analyzing various system 
 - **Reinstall the Package**:
   ```bash
   sudo dpkg -r dpkg-status
-  sudo dpkg -i dpkg-status_1.3_all.deb
+  sudo dpkg -i dpkg-status_1.4_amd64.deb
   ```
 
 ### **Debugging Installation**:
