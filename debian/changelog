@@ -1,3 +1,12 @@
+dpkg-status (1.3) unstable; urgency=medium
+
+  * Added new features and improvements for version 1.3.
+  * Enhanced UI design and added styling to the application.
+  * Improved installation instructions in the README.md file.
+  * Fixed minor bugs in the script execution.
+
+ -- Jesse Finneman <jfprogramming@yahoo.com>  Sun, 14 Apr 2025 00:15:00 -0600
+
 dpkg-status (1.2) unstable; urgency=medium
 
   * Incorporated latest bug fixes and improvements.

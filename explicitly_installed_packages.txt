@@ -19,6 +19,7 @@ Packages explicitly installed by the user:
 - diffstat
 - diffutils
 - doxygen
+- dpkg-status
 - efibootmgr
 - ffmpeg
 - file

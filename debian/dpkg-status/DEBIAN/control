@@ -1,5 +1,5 @@
 Package: dpkg-status
-Version: 1.2
+Version: 1.3
 Architecture: all
 Maintainer: Jesse Finneman <jfprogramming@yahoo.com>
 Installed-Size: 21
