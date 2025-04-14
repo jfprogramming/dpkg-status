@@ -6,7 +6,7 @@ ApplicationWindow {
     visible: true
     width: 640
     height: 480
-    title: "Script Output Viewer"
+    title: "DPKG Status Script Output Viewer"
     color: "#f0f0f0" // Light background color for the whole window
 
     ColumnLayout {
@@ -20,7 +20,7 @@ ApplicationWindow {
             Layout.fillWidth: true
 
             Text {
-                text: "Script Output Viewer"
+                text: "DPKG Status Script Output Viewer"
                 color: "white"
                 font.pixelSize: 24
                 font.bold: true
@@ -107,7 +107,7 @@ ApplicationWindow {
             Layout.fillWidth: true
 
             Text {
-                text: "© 2025 Script Viewer App"
+                text: "© 2025 DPKG Status Script Viewer App Author: Jesse Finneman"
                 color: "white"
                 font.pixelSize: 14
                 anchors.centerIn: parent
