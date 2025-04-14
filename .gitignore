@@ -180,6 +180,7 @@ qtcreator/*.pro.user
 # Ignore specific directories
 qt/build/
 build/
+CMakeCache.txt
 
 # Ignore build artifacts
 qt/build/
