@@ -215,6 +215,13 @@ The script determines explicitly installed packages by analyzing various system 
      ```bash
      QT_DEBUG_PLUGINS=1 appdpkg-status
      ```
+     
+### Known Anomalies and Bugs:
+   - Dependency on Qt 6.2.4: The application does not bundle the required Qt libraries or QML files. As a result, it will only run on systems with Qt 6.2.4 installed.
+   
+   - Packaging Issues: Attempts to package the application using *linuxdeployqt* were unsuccessful in creating a fully self-contained application. The missing QML files prevented the application from functioning on a clean Debian 12 system.
+   
+   - Workaround: Until the packaging issue is resolved, manually installing Qt 6.2.4 is required to run the application successfully.
 ---
 
 ## **9. Releases**
