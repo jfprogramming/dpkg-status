@@ -166,16 +166,55 @@ The script determines explicitly installed packages by analyzing various system 
 - Pre-integrated with `dpkg_status.py` for seamless backend processing.
 
 ### **Running the Qt App**:
-1. After installing the `.deb` package:
+1. Possible packages need to run qt ap
+   ```bash
+   sudo apt install libxcb-cursor0
+                    libxcb-cursor-dev
+                    libqt6quick6
+                    libqt6quickcontrols2-6
+                    libqt6quicklayouts6
+                    qt6-declarative-dev
+                    qt6-declarative-dev-tools
+                    build-essential
+                    libxcb-xinerama0
+                    libxcb1
+                    libxcb-render0
+                    libxcb-shape0
+                    libxcb-glx0
+                    qt6-wayland
+   ```
+3. 
+      
+3. After installing the `.deb` package:
    ```bash
    appdpkg-status
    ```
 
-2. Debugging:
+4. Debugging:
    - If the application doesn't run, enable debugging:
      ```bash
      QT_DEBUG_PLUGINS=1 appdpkg-status
      ```
+   - Installation of Qt 6.2.4 maybe necessary on target device to provide qml files for qt applicaiton
+     - Qt Online Installer:
+       ```bash
+       wget https://download.qt.io/official_releases/online_installers/qt-online-installer-linux-x64-online.run
+       ```
+       
+  - Make the downloaded file executable:
+    ```bash
+    chmod +x qt-online-installer-linux-x64-online.run
+    ```
+    
+  - Run the installer:
+    ```bash
+    ./qt-online-installer-linux-x64-online.run
+    ```
+    
+  -  Set LD_LIBRARY_PATH ENV VAR
+      ```bash
+      export PATH=/opt/Qt/6.2.4/bin:$PATH
+      ```
 
 ---
 
