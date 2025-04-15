@@ -32,10 +32,16 @@
    - ```bash
      sudo dpkg -i dpkg-status_1.4_amd64.deb
      ```
-   - ```bash
+   - Using dpkg to install
+     ```bash
      sudo apt-get install ./dpkg-status_1.4_amd64.deb
-     sudo apt --fix-broken install
+     sudo apt -f install
      ```
+   - Using apt to install
+    ```bash
+    sudo apt-get install ./dpkg-status_1.4_amd64.deb
+    sudo apt-get install -f
+    ```****
 
 4. Run the Script:
    ```bash
@@ -51,12 +57,12 @@
    ```
 
 2. Install dependencies and build the `.deb` package:
+ - Using dpkg to install
    ```bash
    cd releases/
    sudo dpkg -i dpkg-status_1.4_amd64.deb
    sudo apt-get install -f
    ```
-
   - Using apt to install
     ```bash
     sudo apt-get install ./dpkg-status_1.4_amd64.deb
