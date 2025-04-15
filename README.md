@@ -24,47 +24,47 @@
 ### **Option 1: Install `.deb` Package via GitHub Release**
 
 1. Download the `.deb` Package:
-   ```bash
-   wget https://github.com/jfprogramming/dpkg-status/releases/download/v1.4/dpkg-status_1.4_amd64.deb
-   ```
+  - ```bash
+    wget https://github.com/jfprogramming/dpkg-status/releases/download/v1.4/dpkg-status_1.4_amd64.deb
+    ```
 
 2. Install the Package:
-   - Using dpkg to install
-     ```bash
-     sudo dpkg -i dpkg-status_1.4_amd64.deb
-     sudo apt -f install
-     ```
-   - Using apt to install
+  - Using dpkg to install
+    ```bash
+    sudo dpkg -i dpkg-status_1.4_amd64.deb
+    sudo apt -f install
+    ```
+  - Using apt to install
     ```bash
     sudo apt-get install ./dpkg-status_1.4_amd64.deb
     sudo apt-get install -f
     ```
 
 4. Run the Script:
-   ```bash
-   dpkg_status.py
-   ```
+  - ```bash
+    dpkg_status.py
+    ```
 
 ### **Option 2: Install via Cloning the Repository**
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/jfprogramming/dpkg-status.git
-   cd dpkg-status
-   ```
+  - ```bash
+     git clone https://github.com/jfprogramming/dpkg-status.git
+     cd dpkg-status
+     ```
 
-2. Install dependencies and build the `.deb` package:
- - Using dpkg to install
-   ```bash
-   cd releases/
-   sudo dpkg -i dpkg-status_1.4_amd64.deb
-   sudo apt-get install -f
-   ```
- - Using apt to install
-   ```bash
-   sudo apt-get install ./dpkg-status_1.4_amd64.deb
-   sudo apt-get install -f
-   ```
+3. Install dependencies and build the `.deb` package:
+   - Using dpkg to install
+     ```bash
+     cd releases/
+     sudo dpkg -i dpkg-status_1.4_amd64.deb
+     sudo apt-get install -f
+     ```
+   - Using apt to install
+     ```bash
+     sudo apt-get install ./dpkg-status_1.4_amd64.deb
+     sudo apt-get install -f
+     ```
 
 ---
 
