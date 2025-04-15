@@ -29,11 +29,15 @@
    ```
 
 2. Install the Package:
-   ```bash
-   sudo dpkg -i dpkg-status_1.4_amd64.deb
-   ```
+   - ```bash
+      sudo dpkg -i dpkg-status_1.4_amd64.deb
+     ```
+  - ```bash
+    sudo apt-get install ./dpkg-status_1.4_amd64.deb
+    sudo apt --fix-broken install
+     ```
 
-3. Run the Script:
+4. Run the Script:
    ```bash
    dpkg_status.py
    ```
