@@ -166,7 +166,13 @@ The script determines explicitly installed packages by analyzing various system 
 - Pre-integrated with `dpkg_status.py` for seamless backend processing.
 
 ### **Running the Qt App**:
-1. Possible packages need to run qt appdpkg-status app on Traget Debian 12 system
+3. After installing the `.deb` package:
+   ```bash
+   appdpkg-status
+   ```
+
+4. Debugging:
+   - Possible packages need to run qt appdpkg-status app on Traget Debian 12 system
    ```bash
    sudo apt install libxcb-cursor0
                     libxcb-cursor-dev
@@ -183,18 +189,7 @@ The script determines explicitly installed packages by analyzing various system 
                     libxcb-glx0
                     qt6-wayland
    ```
-3. 
-      
-3. After installing the `.deb` package:
-   ```bash
-   appdpkg-status
-   ```
-
-4. Debugging:
-   - If the application doesn't run, enable debugging:
-     ```bash
-     QT_DEBUG_PLUGINS=1 appdpkg-status
-     ```
+   
    - Installation of Qt 6.2.4 maybe necessary on target device to provide qml files for qt applicaiton
      - Qt Online Installer:
        ```bash
@@ -215,7 +210,11 @@ The script determines explicitly installed packages by analyzing various system 
       ```bash
       export PATH=/opt/Qt/6.2.4/bin:$PATH
       ```
-
+      
+   - If the application doesn't run, rebuild, repackage and reinstall deb package with debugging enabled:
+     ```bash
+     QT_DEBUG_PLUGINS=1 appdpkg-status
+     ```
 ---
 
 ## **9. Releases**
