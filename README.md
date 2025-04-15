@@ -29,19 +29,16 @@
    ```
 
 2. Install the Package:
-   - ```bash
-     sudo dpkg -i dpkg-status_1.4_amd64.deb
-     ```
    - Using dpkg to install
      ```bash
-     sudo apt-get install ./dpkg-status_1.4_amd64.deb
+     sudo dpkg -i dpkg-status_1.4_amd64.deb
      sudo apt -f install
      ```
    - Using apt to install
     ```bash
     sudo apt-get install ./dpkg-status_1.4_amd64.deb
     sudo apt-get install -f
-    ```****
+    ```
 
 4. Run the Script:
    ```bash
