@@ -166,7 +166,7 @@ The script determines explicitly installed packages by analyzing various system 
 - Pre-integrated with `dpkg_status.py` for seamless backend processing.
 
 ### **Running the Qt App**:
-1. Possible packages need to run qt ap
+1. Possible packages need to run qt appdpkg-status app on Traget Debian 12 system
    ```bash
    sudo apt install libxcb-cursor0
                     libxcb-cursor-dev
