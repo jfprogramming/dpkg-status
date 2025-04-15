@@ -30,11 +30,11 @@
 
 2. Install the Package:
    - ```bash
-      sudo dpkg -i dpkg-status_1.4_amd64.deb
+     sudo dpkg -i dpkg-status_1.4_amd64.deb
      ```
-  - ```bash
-    sudo apt-get install ./dpkg-status_1.4_amd64.deb
-    sudo apt --fix-broken install
+   - ```bash
+     sudo apt-get install ./dpkg-status_1.4_amd64.deb
+     sudo apt --fix-broken install
      ```
 
 4. Run the Script:
