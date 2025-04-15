@@ -4,6 +4,7 @@ project(dpkg-status VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTOMOC ON)
 
 # Set the build type to Debug by default
 if(NOT CMAKE_BUILD_TYPE)
@@ -14,7 +15,14 @@ endif()
 # Find required Qt packages
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick Qml Network DBus)
 
-qt_standard_project_setup()
+if(Qt6_VERSION VERSION_GREATER 6.3)
+    qt_standard_project_setup()
+else()
+    # Fall back for older Qt versions
+    set(CMAKE_AUTOUIC ON)
+    set(CMAKE_AUTORCC ON)
+    set(CMAKE_AUTOMOC ON)
+endif()
 
 # Add the executable
 qt_add_executable(appdpkg-status

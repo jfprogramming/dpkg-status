@@ -56,6 +56,8 @@ Packages explicitly installed by the user:
 - libglu1-mesa-dev
 - libgtest-dev
 - liblz4-tool
+- libqt6quickcontrols2-6
+- libqt6quickcontrols2impl6
 - libreoffice-help-common
 - libreoffice-help-en-us
 - libssl-dev
@@ -87,6 +89,7 @@ Packages explicitly installed by the user:
 - shim-signed
 - simplescreenrecorder
 - socat
+- software-properties-common
 - sqlite3
 - sqlitebrowser
 - ssh
