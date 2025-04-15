@@ -52,9 +52,16 @@
 
 2. Install dependencies and build the `.deb` package:
    ```bash
-   sudo apt-get install -f
+   cd releases/
    sudo dpkg -i dpkg-status_1.4_amd64.deb
+   sudo apt-get install -f
    ```
+
+  - Using apt to install
+    ```bash
+    sudo apt-get install ./dpkg-status_1.4_amd64.deb
+    sudo apt-get install -f
+    ```
 
 ---
 
