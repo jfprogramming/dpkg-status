@@ -150,6 +150,10 @@ The script determines explicitly installed packages by analyzing various system 
 
 5. **Final Output**:
    - Outputs a deduplicated list of explicitly installed packages.
+   - The script saves the list of explicitly installed packages to /tmp/explicitly_installed_packages.txt file
+     - ```bash 
+       /tmp/explicitly_installed_packages.txt
+       ``` 
 
 ---
 
