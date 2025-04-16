@@ -168,7 +168,7 @@ def main():
     logger.debug(f"explicitly_installed_list: {explicitly_installed_list}")
 
     # Save results to a file and display them
-    output_file = "explicitly_installed_packages.txt"
+    output_file = "/tmp/explicitly_installed_packages.txt"
     try:
         # Open the output file in write mode with UTF-8 encoding
         with open(output_file, "w", encoding="utf-8") as file:
