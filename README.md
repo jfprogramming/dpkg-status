@@ -234,6 +234,50 @@ The script determines explicitly installed packages by analyzing various system 
      QT_DEBUG_PLUGINS=1 appdpkg-status
      ```
      
+
+## Using `linuxdeployqt` to Bundle Qt Libraries
+
+To package the `appdpkg-status` binary with its required Qt libraries and dependencies into an AppImage, follow these steps:
+
+1. **Install Required Tools**:
+   - Ensure `linuxdeployqt` is downloaded and executable:
+     ```bash
+     wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
+     chmod +x linuxdeployqt-continuous-x86_64.AppImage
+     ```
+
+2. **Prepare the Build Directory**:
+   - Ensure the `build` directory contains the binary `appdpkg-status`.
+   - Copy missing QML modules from the Qt installation directory:
+     ```bash
+     cp -r /opt/Qt/6.2.4/6.2.4/gcc_64/qml/QtQuick/Controls qt/build/qml/QtQuick/
+     cp -r /opt/Qt/6.2.4/6.2.4/gcc_64/qml/QtQuick/Layouts qt/build/qml/QtQuick/
+     ```
+
+3. **Run `linuxdeployqt`**:
+   - Bundle the application into an AppImage:
+     ```bash
+     ./linuxdeployqt-continuous-x86_64.AppImage qt/build/appdpkg-status -appimage -qmake=/opt/Qt/6.2.4/6.2.4/gcc_64/bin/qmake -qmldir=qt/dpkgstatus/qml
+     ```
+
+4. **Test the Generated AppImage**:
+   - Run the `.AppImage` file to verify all dependencies are bundled:
+     ```bash
+     ./appdpkg-status.AppImage
+     ```
+
+5. **Debugging**:
+   - If the application fails to run, set the `QML2_IMPORT_PATH` environment variable to point to the bundled QML directory:
+     ```bash
+     export QML2_IMPORT_PATH=qt/build/qml
+     ./qt/build/appdpkg-status
+     ```
+   - Use verbose mode in `linuxdeployqt` to identify missing dependencies:
+     ```bash
+     ./linuxdeployqt-continuous-x86_64.AppImage qt/build/appdpkg-status -verbose=3
+     ```
+     
+
 ### Known Anomalies and Bugs:
    - Dependency on Qt 6.2.4: The application does not bundle the required Qt libraries or QML files. As a result, it will only run on systems with Qt 6.2.4 installed.
    
