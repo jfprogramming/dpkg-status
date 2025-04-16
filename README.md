@@ -53,7 +53,7 @@
      cd dpkg-status
      ```
 
-3. Install dependencies and build the `.deb` package:
+2. Install dependencies and build the `.deb` package:
    - Using dpkg to install
      ```bash
      cd releases/
@@ -65,7 +65,11 @@
      sudo apt-get install ./dpkg-status_1.4_amd64.deb
      sudo apt-get install -f
      ```
-
+     
+3. Run the Script:
+   - ```bash
+     dpkg_status.py
+     ```
 ---
 
 ## **2. Features**
