@@ -205,3 +205,5 @@ CMakeFiles/
 *.tmp
 *.log
 *.swp
+
+explicitly_installed_packages.txt 

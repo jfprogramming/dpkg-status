@@ -33,7 +33,8 @@ void DpkgModelData::runScript()
 {
     QProcess process;
     // Run the Python script installed in the system by the custom deb package
-    process.start("dpkg_status.py");
+    //process.start("dpkg_status.py");
+    process.start("/usr/share/appdpkg-status/dpkg_status.py");
 
     if (!process.waitForFinished()) {
         qWarning() << "Failed to run script:" << process.errorString();
