@@ -106,6 +106,7 @@ To successfully run the script, ensure the following prerequisites are met:
    - `/var/lib/dpkg/status`
    - `/var/lib/apt/extended_states`
 4. **Permissions**: Read access to `/var/lib/dpkg/status` and `/var/lib/apt/extended_states`.
+5. **Package Dependencies**: `libqt6core6`, `libqt6gui6`, and `libqt6qml6`
 
 ---
 
