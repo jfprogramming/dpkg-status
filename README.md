@@ -25,24 +25,33 @@
 
 1. Download the `.deb` Package:
    - ```bash
-     wget https://github.com/jfprogramming/dpkg-status/releases/download/v1.4/dpkg-status_1.4_amd64.deb
+     wget https://github.com/jfprogramming/dpkg-status/releases/download/v1/dpkg-status-1.0.0-Linux.deb
      ```
 
 2. Install the Package:
    - Using dpkg to install
      ```bash
-     sudo dpkg -i dpkg-status_1.4_amd64.deb
+     sudo dpkg -i dpkg-status-1.0.0-Linux.deb
+     
+     # use to install missing qt dependencies
      sudo apt -f install
      ```
    - Using apt to install
      ```bash
-     sudo apt-get install ./dpkg-status_1.4_amd64.deb
-     sudo apt-get install -f
+     sudo apt-get install ./dpkg-status-1.0.0-Linux.deb
+     # use to install missing qt dependencies
+     sudo apt -f install
      ```
 
-3. Run the Script:
+3. Run the Qt GUI Application:
+   - ```bash 
+     appdpkg-status
+     ``` 
+   - select the button "run script" on the Qt GUI Application 
+
+4. Run the Python Script without Qt GUI Application:
    - ```bash
-     dpkg_status.py
+     /usr/share/appdpkg-status/dpkg_status.py
      ```
 
 ### **Option 2: Install via Cloning the Repository**
@@ -57,26 +66,33 @@
    - Using dpkg to install
      ```bash
      cd releases/
-     sudo dpkg -i dpkg-status_1.4_amd64.deb
+     sudo dpkg -i dpkg-status-1.0.0-Linux.deb
+     # use to install missing qt dependencies
      sudo apt-get install -f
      ```
    - Using apt to install
      ```bash
-     sudo apt-get install ./dpkg-status_1.4_amd64.deb
+     sudo apt-get install ./dpkg-status-1.0.0-Linux.deb
+     # use to install missing qt dependencies
      sudo apt-get install -f
      ```
      
-3. Run the Script:
+3. Run the Qt GUI Application:
+   - ```bash 
+     appdpkg-status
+     ``` 
+   - select the button "run script" on the Qt GUI Application 
+
+4. Run the Python Script without Qt GUI Application:
    - ```bash
-     dpkg_status.py
-     ```
+     /usr/share/appdpkg-status/dpkg_status.py
 ---
 
 ## **2. Features**
 
 - Parses `/var/lib/dpkg/status` to list explicitly installed packages.
 - Leverages `/var/lib/apt/extended_states` for analyzing auto-installed packages.
-- Optionally integrates with `apt-mark showmanual` for enhanced accuracy.
+- Integrates with `apt-mark showmanual` for script accuracy.
 
 ---
 
@@ -98,6 +114,7 @@ To successfully run the script, ensure the following prerequisites are met:
 - **Memory**: Minimum 512 MB of RAM.
 - **Disk Space**: Minimal (only requires access to `/var/lib/dpkg/` and `/var/lib/apt/`).
 - **Linux Distribution**: Compatible with all Debian-based distributions.
+- **Commands**: python3.10, pip, wget and git command line utilities 
 
 ---
 
@@ -110,19 +127,38 @@ Follow these steps to set up the project for development:
    git clone https://github.com/jfprogramming/dpkg-status.git
    cd dpkg-status
    ```
+   
+2. Project directory structure:
+   ```plaintext
+   dpkg-status/
+   ├── qt/
+   │   ├── build
+   │   ├── qml
+   │   ├── main.cpp
+   │   ├── dpkg_status.py
+   │   ├── install
+   │   ├── compat
+   ├── src/
+   │   ├── dpkg_status.py
+   ├── tests/
+   │   ├── test_dpkg_status.py
+   ├── releases/
+   │   ├── dpkg-status-<version>-Linux.deb
+   ├── README.md
+   ```
 
-2. (Optional) Set up a virtual environment:
+3. (Optional) Set up a virtual environment:
    ```bash
    python3 -m venv .venv
    source .venv/bin/activate
    ```
 
-3. Install dependencies, if required:
+4. Install dependencies, if required:
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Run the script:
+5. Run the script:
    ```bash
    ./dpkg_status.py
    ```
@@ -190,140 +226,76 @@ The script determines explicitly installed packages by analyzing various system 
    ```
 
 4. Debugging:
-   - Possible packages need to run qt appdpkg-status app on Traget Debian 12 system
+   - Possible packages need to run qt *appdpkg-status* app on Target Debian 12 system
    ```bash
-   sudo apt install libxcb-cursor0
-                    libxcb-cursor-dev
-                    libqt6quick6
-                    libqt6quickcontrols2-6
-                    libqt6quicklayouts6
-                    qt6-declarative-dev
-                    qt6-declarative-dev-tools
-                    build-essential
-                    libxcb-xinerama0
-                    libxcb1
-                    libxcb-render0
-                    libxcb-shape0
-                    libxcb-glx0
-                    qt6-wayland
+   sudo apt install git
+                    wget
    ```
    
-   - Installation of Qt 6.2.4 maybe necessary on target device to provide qml files for qt applicaiton
-     - Qt Online Installer:
-       ```bash
-       wget https://download.qt.io/official_releases/online_installers/qt-online-installer-linux-x64-online.run
-       ```
-       
-  - Make the downloaded file executable:
-    ```bash
-    chmod +x qt-online-installer-linux-x64-online.run
-    ```
-    
-  - Run the installer:
-    ```bash
-    ./qt-online-installer-linux-x64-online.run
-    ```
-    
-  -  Set LD_LIBRARY_PATH ENV VAR
-      ```bash
-      export PATH=/opt/Qt/6.2.4/bin:$PATH
-      ```
-      
-   - If the application doesn't run, rebuild, repackage and reinstall deb package with debugging enabled:
-     ```bash
-     QT_DEBUG_PLUGINS=1 appdpkg-status
-     ```
+   - If the application doesn't run, rebuild, repackage and reinstall deb package
      
 
-## Using `linuxdeployqt` to Bundle Qt Libraries
+## Using `cpack` to Bundle Qt Libraries and Generate .deb package
 
-To package the `appdpkg-status` binary with its required Qt libraries and dependencies into an AppImage, follow these steps:
+To package the `appdpkg-status` binary with its required Qt libraries and dependencies, follow these steps:
 
-1. **Install Required Tools**:
-   - Ensure `linuxdeployqt` is downloaded and executable:
-     ```bash
-     wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
-     chmod +x linuxdeployqt-continuous-x86_64.AppImage
+1. **Configure CMakeList.txt file**:
+   - Ensure CMakeList file is configured for cpack:
+     - set(CPACK_PACKAGE_NAME "dpkg-status")
+     - set(CPACK_PACKAGE_VERSION "1.0.0")
+     - set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A tool for managing dpkg status files")
+     - set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Full Name <Email>")
+     - set(CPACK_PACKAGE_HOMEPAGE_URL "https://example.com")
+     - set(CPACK_PACKAGE_LICENSE "MIT")
+     - set(CPACK_GENERATOR "DEB")
+     - set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6core6, libqt6gui6, libqt6qml6, python3")
+     - set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
+     - include(CPack)
+     - install(TARGETS appdpkg-status DESTINATION bin)
+     - install(DIRECTORY ${CMAKE_SOURCE_DIR}/qml DESTINATION share/appdpkg-status)
+     - install(FILES ${CMAKE_SOURCE_DIR}/dpkg_status.py DESTINATION share/appdpkg-status PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ)
+
+    
+2. **Configure the project:**
+   - ```bash
+     cmake ..
      ```
 
-2. **Prepare the Build Directory**:
-   - Ensure the `build` directory contains the binary `appdpkg-status`.
-   - Copy missing QML modules from the Qt installation directory:
-     ```bash
-     cp -r /opt/Qt/6.2.4/6.2.4/gcc_64/qml/QtQuick/Controls qt/build/qml/QtQuick/
-     cp -r /opt/Qt/6.2.4/6.2.4/gcc_64/qml/QtQuick/Layouts qt/build/qml/QtQuick/
+3. **Build the project**:
+   - ```bash
+     make
      ```
 
-3. **Run `linuxdeployqt`**:
-   - Bundle the application into an AppImage:
-     ```bash
-     ./linuxdeployqt-continuous-x86_64.AppImage qt/build/appdpkg-status -appimage -qmake=/opt/Qt/6.2.4/6.2.4/gcc_64/bin/qmake -qmldir=qt/dpkgstatus/qml
-     ```
-
-4. **Test the Generated AppImage**:
-   - Run the `.AppImage` file to verify all dependencies are bundled:
-     ```bash
-     ./appdpkg-status.AppImage
-     ```
-
-5. **Debugging**:
-   - If the application fails to run, set the `QML2_IMPORT_PATH` environment variable to point to the bundled QML directory:
-     ```bash
-     export QML2_IMPORT_PATH=qt/build/qml
-     ./qt/build/appdpkg-status
-     ```
-   - Use verbose mode in `linuxdeployqt` to identify missing dependencies:
-     ```bash
-     ./linuxdeployqt-continuous-x86_64.AppImage qt/build/appdpkg-status -verbose=3
+4. **Package with CPack**:
+   - ```bash
+     cpack -G DEB
      ```
      
+5. **Copy deb package**
+   - Copy the deb package to the release folder for upload to GitHub 
+   - Create a new release, add tag, add notes and upload deb file created 
+ 
 
 ### Known Anomalies and Bugs:
-   - Dependency on Qt 6.2.4: The application does not bundle the required Qt libraries or QML files. As a result, it will only run on systems with Qt 6.2.4 installed.
-   
-   - Packaging Issues: Attempts to package the application using *linuxdeployqt* were unsuccessful in creating a fully self-contained application. The missing QML files prevented the application from functioning on a clean Debian 12 system.
-   
-   - Workaround: Until the packaging issue is resolved, manually installing Qt 6.2.4 is required to run the application successfully.
+   - Dependency on Qt 6.2.4
+     - install any missing dependencies  
 ---
 
 ## **9. Releases**
 
 ### **Creating a `.deb` Package**:
-1. Set up the project directory structure:
-   ```plaintext
-   dpkg-status/
-   ├── debian/
-   │   ├── control
-   │   ├── changelog
-   │   ├── copyright
-   │   ├── rules
-   │   ├── install
-   │   ├── compat
-   ├── src/
-   │   ├── dpkg_status.py
-   ├── releases/
-   │   ├── dpkg-status_<version>_all.deb
-   ├── README.md
-   ```
-
-2. Build the package:
-   ```bash
-   debuild -us -uc
-   ```
-
-3. Verify the package:
-   ```bash
-   lintian ../dpkg-status_<version>_all.deb
-   ```
-
-4. Publish on GitHub:
+1. Releases are created and tested local
+   - build and test the deb package locally
+   
+2. Publish on GitHub:
    - Attach the `.deb` package to a GitHub release with appropriate release notes.
+   - update readme with latest version of deb package to install 
 
 ---
 
 ## **10. Troubleshooting**
 
-### **General Issues**:
+### **General Issues & Debugging**:
 - **Missing Dependencies**:
   ```bash
   sudo apt-get install -f
@@ -332,18 +304,19 @@ To package the `appdpkg-status` binary with its required Qt libraries and depend
 - **Reinstall the Package**:
   ```bash
   sudo dpkg -r dpkg-status
-  sudo dpkg -i dpkg-status_1.4_amd64.deb
+  sudo dpkg -i dpkg-status-1.0.0-Linux.deb
   ```
-
-### **Debugging Installation**:
-1. Enable debug logging:
+  
+- **Verify installed script**:
+   ```bash
+   ls -l /usr/bin/appdpkg-status
+   ls -l /usr/bin/appdpkg-status/
+   ```
+  
+### **Qt Debugging Settings**:
+1. Enable debug logging for Qt GUI App:
    ```plaintext
    logging.basicConfig(level=logging.DEBUG)
-   ```
-
-2. Verify installed script:
-   ```bash
-   ls /usr/bin/dpkg_status.py
    ```
 
 ---
