@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=AppDPKG-Status
+Exec=appdpkg-status
+Icon=icon
+Comment=DPKG Status Application
+Categories=Utility;
