@@ -19,6 +19,10 @@ int main(int argc, char *argv[])
     DpkgModelData tableModel;
     engine.rootContext()->setContextProperty("tableModel", &tableModel);
 
+    QCoreApplication::addLibraryPath("./lib/qt/plugins");
+    engine.addImportPath("/opt/Qt/6.7.2/gcc_64/qml");
+    engine.addImportPath(QCoreApplication::applicationDirPath() + "/lib/qt/qml");
+
 #ifdef QT_DEBUG
     QDirIterator it(":", QDirIterator::Subdirectories);
     while (it.hasNext()) {
