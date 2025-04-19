@@ -6,11 +6,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 
-# Set the CMake module path to find Qt modules
+# Qt setup based on version
 if(Qt6_VERSION VERSION_GREATER 6.3)
     qt_standard_project_setup()
 else()
-    # Fall back for older Qt versions
     set(CMAKE_AUTOUIC ON)
     set(CMAKE_AUTORCC ON)
     set(CMAKE_AUTOMOC ON)
@@ -19,37 +18,25 @@ endif()
 # Find required Qt modules
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
 
-
 # Add the executable
-qt_add_executable(appdpkg-status
-    main.cpp
-)
+qt_add_executable(appdpkg-status main.cpp)
 
 # Add Qt resources
 qt_add_resources(appdpkg-status "resources"
     PREFIX "/dpkgstatus"
-    FILES
-        resource.qrc
+    FILES resource.qrc
 )
 
 # Add QML module
 qt_add_qml_module(appdpkg-status
     URI dpkgstatus
     VERSION 1.0
-    SOURCES
-        dpkgmodeldata.h
-        dpkgmodeldata.cpp
-    QML_FILES
-        qml/Main.qml
+    SOURCES dpkgmodeldata.h dpkgmodeldata.cpp
+    QML_FILES qml/Main.qml
 )
 
 # Link Qt libraries
-target_link_libraries(appdpkg-status PRIVATE
-    Qt6::Core
-    Qt6::Gui
-    Qt6::Qml
-    Qt6::Quick
-)
+target_link_libraries(appdpkg-status PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick)
 
 # Packaging information
 set(CPACK_PACKAGE_NAME "dpkg-status")
@@ -70,82 +57,59 @@ include(CPack)
 
 # Enable RPATH handling
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-# set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-set(CMAKE_INSTALL_RPATH "$ORIGIN/lib;/opt/Qt/6.7.2/gcc_64/lib")
-# set(CMAKE_INSTALL_RPATH "$ORIGIN/lib")
+set(CMAKE_INSTALL_RPATH "$ORIGIN/lib")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
-# Prevent CPack from modifying the RPATH
-# set(CPACK_SET_DESTDIR ON)
-# set(CPACK_STRIP_FILES OFF)
-# set(CPACK_INSTALL_RPATH "$ORIGIN/lib;/opt/Qt/6.7.2/gcc_64/lib")
-# set(CPACK_INSTALL_RPATH "$ORIGIN/lib")
-# set(CPACK_INSTALL_RPATH_USE_LINK_PATH FALSE)
+# Prevent CMake from automatically removing RPATH during installation
+set(CMAKE_SKIP_RPATH FALSE)
+set(CMAKE_SKIP_INSTALL_RPATH FALSE)
 
-# Install the Qt libraries bundled by linuxdeployqt
-install(DIRECTORY ${CMAKE_BINARY_DIR}/lib/ DESTINATION lib)
-install(DIRECTORY ${CMAKE_BINARY_DIR}/lib/ DESTINATION /usr/lib)
-# Install the .desktop file
-install(FILES ${CMAKE_SOURCE_DIR}/default.desktop DESTINATION share/applications)
-# Install the icon
-install(FILES ${CMAKE_SOURCE_DIR}/icon.png DESTINATION share/icons/hicolor/64x64/apps)
+message("Binary path: ${CMAKE_BINARY_DIR}/appdpkg-status")
+message("QML path: ${CMAKE_SOURCE_DIR}/qml/")
+message("RPATH: ${CMAKE_INSTALL_RPATH}")
 
-# Install the Qt QML modules
-# install(DIRECTORY /opt/Qt/6.7.2/gcc_64/qml/QtQuick DESTINATION lib/qt/qml)
-# install(DIRECTORY /opt/Qt/6.7.2/gcc_64/qml/QtQuick/Controls DESTINATION lib/qt/qml)
-# install(DIRECTORY /opt/Qt/6.7.2/gcc_64/qml/QtQuick/Layouts DESTINATION lib/qt/qml)
 
-install(DIRECTORY /opt/Qt/6.7.2/gcc_64/qml/QtQuick
-        DESTINATION lib/qt/qml/QtQuick)
-
-install(DIRECTORY /opt/Qt/6.7.2/gcc_64/qml/QtQuick/Controls
-        DESTINATION lib/qt/qml/QtQuick/Controls)
-
-install(DIRECTORY /opt/Qt/6.7.2/gcc_64/qml/QtQuick/Layouts
-        DESTINATION lib/qt/qml/QtQuick/Layouts)
-
-install(FILES
-    /opt/Qt/6.7.2/gcc_64/lib/libQt6QuickControls2Impl.so.6
-    DESTINATION lib
-)
-
-# Install the application binary and resources
 install(TARGETS appdpkg-status DESTINATION bin)
+message(STATUS "Final RPATH for appdpkg-status: ${CMAKE_INSTALL_RPATH}")
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/qml/ DESTINATION share/appdpkg-status)
-
-# Install the Python script to /usr/share/dpkg-status/
 install(FILES ${CMAKE_SOURCE_DIR}/dpkg_status.py DESTINATION share/appdpkg-status
-    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ)
-
-# Install the Qt platform plugins
-install(FILES
-    /opt/Qt/6.7.2/gcc_64/plugins/platforms/libqxcb.so
-    /opt/Qt/6.7.2/gcc_64/plugins/platforms/libqwayland-generic.so
-    DESTINATION lib/qt/plugins/platforms
+    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
 )
 
-# Install XCB-related libraries
-install(FILES
-    /lib/x86_64-linux-gnu/libxcb.so.1
-    /lib/x86_64-linux-gnu/libxkbcommon.so.0
-    /lib/x86_64-linux-gnu/libxkbcommon-x11.so.0
-    /lib/x86_64-linux-gnu/libxcb-cursor.so.0
-    /lib/x86_64-linux-gnu/libxcb-icccm.so.4
-    /lib/x86_64-linux-gnu/libxcb-image.so.0
-    /lib/x86_64-linux-gnu/libxcb-keysyms.so.1
-    /lib/x86_64-linux-gnu/libxcb-randr.so.0
-    /lib/x86_64-linux-gnu/libxcb-render.so.0
-    /lib/x86_64-linux-gnu/libxcb-shape.so.0
-    /lib/x86_64-linux-gnu/libxcb-shm.so.0
-    /lib/x86_64-linux-gnu/libxcb-sync.so.1
-    /lib/x86_64-linux-gnu/libxcb-util.so.1
-    /lib/x86_64-linux-gnu/libxcb-xfixes.so.0
-    /lib/x86_64-linux-gnu/libxcb-xkb.so.1
-    /lib/x86_64-linux-gnu/libwayland-client.so.0
-    /lib/x86_64-linux-gnu/libwayland-cursor.so.0
-    /lib/x86_64-linux-gnu/libwayland-egl.so.1
-    DESTINATION lib
+add_custom_command(
+    OUTPUT linuxdeployqt_bundle
+    COMMAND linuxdeployqt ${CMAKE_BINARY_DIR}/appdpkg-status
+            -qmldir=${CMAKE_SOURCE_DIR}/qml
+            -qmake=/opt/Qt/6.7.2/gcc_64/bin/qmake
+    DEPENDS appdpkg-status
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Running linuxdeployqt to bundle Qt dependencies for .deb"
+)
+
+# Add a custom target to trigger the linuxdeployqt step
+add_custom_target(bundle ALL
+    DEPENDS linuxdeployqt_bundle
 )
 
 
-# install(DIRECTORY /opt/Qt/6.7.2/gcc_64/plugins/platforms DESTINATION lib/qt/plugins)
+# Add a custom target to set RPATH after appdpkg-status is built
+add_custom_target(set_rpath
+    COMMAND patchelf --set-rpath "/opt/Qt/6.7.2/gcc_64/lib:" ${CMAKE_BINARY_DIR}/appdpkg-status
+    COMMENT "Setting RPATH for appdpkg-status"
+)
+
+# Ensure set_rpath runs after appdpkg-status is built
+add_dependencies(set_rpath appdpkg-status)
+
+# Add a custom target for packaging with cpack
+add_custom_target(package_with_cpack
+    DEPENDS set_rpath
+    COMMAND ${CMAKE_COMMAND} -E echo "Starting CPack..."
+    COMMAND cpack
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Running CPack to generate the package"
+    VERBATIM
+)
+
+# Add the 'package' target as an alias for 'package_with_cpack'
+add_custom_target(custom_package DEPENDS package_with_cpack)
