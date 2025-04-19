@@ -4,7 +4,6 @@ project(dpkg-status)
 # Set compiler flags
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_AUTOMOC ON)
 
 # Qt setup based on version
 if(Qt6_VERSION VERSION_GREATER 6.3)
@@ -58,12 +57,9 @@ include(CPack)
 # Enable RPATH handling
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_INSTALL_RPATH "$ORIGIN/lib")
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-# Prevent CMake from automatically removing RPATH during installation
-set(CMAKE_SKIP_RPATH FALSE)
-set(CMAKE_SKIP_INSTALL_RPATH FALSE)
-
+# Output the paths for debugging
 message("Binary path: ${CMAKE_BINARY_DIR}/appdpkg-status")
 message("QML path: ${CMAKE_SOURCE_DIR}/qml/")
 message("RPATH: ${CMAKE_INSTALL_RPATH}")
@@ -76,11 +72,12 @@ install(FILES ${CMAKE_SOURCE_DIR}/dpkg_status.py DESTINATION share/appdpkg-statu
     PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
 )
 
-install(DIRECTORY ${CMAKE_BINARY_DIR}/lib/
-        DESTINATION lib/appdpkg-status
+# Ensure platforms directory is created and installed
+install(DIRECTORY ${CMAKE_BINARY_DIR}/lib/platforms/
+        DESTINATION lib/appdpkg-status/platforms
         FILES_MATCHING PATTERN "*.so*")
 
-
+# Update linuxdeployqt to bundle plugins explicitly
 add_custom_command(
     COMMAND_EXPAND_LISTS
     COMMAND ${CMAKE_COMMAND} -E remove -f ${CMAKE_BINARY_DIR}/qt.conf
@@ -90,20 +87,16 @@ add_custom_command(
             -qmldir=${CMAKE_SOURCE_DIR}/qml
             -qmake=/opt/Qt/6.7.2/gcc_64/bin/qmake
             -bundle-non-qt-libs
+            -extra-plugins=platforms
     DEPENDS appdpkg-status
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     COMMENT "Finished running linuxdeployqt to bundle Qt dependencies for .deb"
 )
 
-# Add a custom target to trigger the linuxdeployqt step
-add_custom_target(bundle ALL
-    DEPENDS linuxdeployqt_bundle
-)
-
-# Add a custom target for packaging with cpack
+# Update RPATH and include CPack for packaging
 add_custom_target(package_with_cpack
     DEPENDS linuxdeployqt_bundle
-    COMMAND patchelf --set-rpath "/opt/Qt/6.7.2/gcc_64/lib:" ${CMAKE_BINARY_DIR}/appdpkg-status
+    COMMAND patchelf --set-rpath "/usr/lib/appdpkg-status:/usr/lib/appdpkg-status/platforms:/opt/Qt/6.7.2/gcc_64/lib:" ${CMAKE_BINARY_DIR}/appdpkg-status
     COMMAND ${CMAKE_COMMAND} -E echo "RPATH set to:"
     COMMAND patchelf --print-rpath ${CMAKE_BINARY_DIR}/appdpkg-status
     COMMAND ${CMAKE_COMMAND} -E echo "Starting CPack... ${CMAKE_INSTALL_RPATH}"
@@ -115,3 +108,5 @@ add_custom_target(package_with_cpack
 
 # Add the 'package' target as an alias for 'package_with_cpack'
 add_custom_target(custom_package DEPENDS package_with_cpack)
+
+
