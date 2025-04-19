@@ -76,14 +76,23 @@ install(FILES ${CMAKE_SOURCE_DIR}/dpkg_status.py DESTINATION share/appdpkg-statu
     PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
 )
 
+install(DIRECTORY ${CMAKE_BINARY_DIR}/lib/
+        DESTINATION lib/appdpkg-status
+        FILES_MATCHING PATTERN "*.so*")
+
+
 add_custom_command(
+    COMMAND_EXPAND_LISTS
+    COMMAND ${CMAKE_COMMAND} -E remove -f ${CMAKE_BINARY_DIR}/qt.conf
+    COMMAND ${CMAKE_COMMAND} -E echo "Running Linuxdeployqt to bundle Qt dependencies for .deb"
     OUTPUT linuxdeployqt_bundle
     COMMAND linuxdeployqt ${CMAKE_BINARY_DIR}/appdpkg-status
             -qmldir=${CMAKE_SOURCE_DIR}/qml
             -qmake=/opt/Qt/6.7.2/gcc_64/bin/qmake
+            -bundle-non-qt-libs
     DEPENDS appdpkg-status
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    COMMENT "Running linuxdeployqt to bundle Qt dependencies for .deb"
+    COMMENT "Finished running linuxdeployqt to bundle Qt dependencies for .deb"
 )
 
 # Add a custom target to trigger the linuxdeployqt step
@@ -91,20 +100,13 @@ add_custom_target(bundle ALL
     DEPENDS linuxdeployqt_bundle
 )
 
-
-# Add a custom target to set RPATH after appdpkg-status is built
-add_custom_target(set_rpath
-    COMMAND patchelf --set-rpath "/opt/Qt/6.7.2/gcc_64/lib:" ${CMAKE_BINARY_DIR}/appdpkg-status
-    COMMENT "Setting RPATH for appdpkg-status"
-)
-
-# Ensure set_rpath runs after appdpkg-status is built
-add_dependencies(set_rpath appdpkg-status)
-
 # Add a custom target for packaging with cpack
 add_custom_target(package_with_cpack
-    DEPENDS set_rpath
-    COMMAND ${CMAKE_COMMAND} -E echo "Starting CPack..."
+    DEPENDS linuxdeployqt_bundle
+    COMMAND patchelf --set-rpath "/opt/Qt/6.7.2/gcc_64/lib:" ${CMAKE_BINARY_DIR}/appdpkg-status
+    COMMAND ${CMAKE_COMMAND} -E echo "RPATH set to:"
+    COMMAND patchelf --print-rpath ${CMAKE_BINARY_DIR}/appdpkg-status
+    COMMAND ${CMAKE_COMMAND} -E echo "Starting CPack... ${CMAKE_INSTALL_RPATH}"
     COMMAND cpack
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     COMMENT "Running CPack to generate the package"

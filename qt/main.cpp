@@ -19,8 +19,18 @@ int main(int argc, char *argv[])
     DpkgModelData tableModel;
     engine.rootContext()->setContextProperty("tableModel", &tableModel);
 
-    QCoreApplication::addLibraryPath("./lib/qt/plugins");
-    engine.addImportPath("/opt/Qt/6.7.2/gcc_64/qml");
+    // old
+    //QCoreApplication::addLibraryPath("./lib/qt/plugins");
+    //engine.addImportPath("/opt/Qt/6.7.2/gcc_64/qml");
+
+    // new
+    //QString qtImportPath = QString::fromUtf8(qgetenv("QT_IMPORT_PATH"));
+    //if (qtImportPath.isEmpty()) {
+    //    qtImportPath = "/opt/Qt/6.7.2/gcc_64/qml"; // Default path
+    //}
+    //engine.addImportPath(qtImportPath);
+
+    // Add the import path for QML modules
     engine.addImportPath(QCoreApplication::applicationDirPath() + "/lib/qt/qml");
 
 #ifdef QT_DEBUG
