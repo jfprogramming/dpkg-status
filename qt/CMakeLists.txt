@@ -14,8 +14,31 @@ else()
     set(CMAKE_AUTOMOC ON)
 endif()
 
-# Find required Qt modules
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
+set(CMAKE_PREFIX_PATH "/opt/Qt/6.7.2/gcc_64/lib/cmake")
+set(Qt6_DIR "/opt/Qt/6.7.2/gcc_64/lib/cmake/Qt6")
+
+# Find Qt dynamically based on user environment or default paths
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick PATHS ENV{QTDIR} NO_DEFAULT_PATH)
+
+if(NOT DEFINED ENV{QTDIR})
+    message(WARNING "QTDIR environment variable is not set. Trying default paths.")
+    find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick HINTS
+        "/opt/Qt/6.7.2/gcc_64"
+        "/usr/lib/qt6"
+        "/usr/local/qt6"
+    )
+endif()
+
+message(STATUS "Detected Qt Installation Path: ${Qt6_DIR}")
+message(STATUS "Using qmake Path: ${QT_QMAKE_PATH}")
+
+if(NOT Qt6_FOUND)
+    message(FATAL_ERROR "Qt6 not found! Please set the QTDIR environment variable or install Qt6.")
+endif()
+
+# Dynamically determine the qmake path
+set(QT_QMAKE_PATH "${Qt6_DIR}/../../../bin/qmake")
+message(STATUS "Using qmake Path: ${QT_QMAKE_PATH}")
 
 # Add the executable
 qt_add_executable(appdpkg-status main.cpp)
@@ -55,8 +78,11 @@ set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
 include(CPack)
 
 # Enable RPATH handling
+# set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+# set(CMAKE_INSTALL_RPATH "$ORIGIN/lib")
+
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-set(CMAKE_INSTALL_RPATH "$ORIGIN/lib")
+set(CMAKE_INSTALL_RPATH "/usr/lib/appdpkg-status:/usr/lib/appdpkg-status/platforms")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # Output the paths for debugging
@@ -72,10 +98,32 @@ install(FILES ${CMAKE_SOURCE_DIR}/dpkg_status.py DESTINATION share/appdpkg-statu
     PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
 )
 
-# Ensure platforms directory is created and installed
-install(DIRECTORY ${CMAKE_BINARY_DIR}/lib/platforms/
+# Ensure lib directory is created and installed
+install(DIRECTORY ${CMAKE_BINARY_DIR}/lib/
+        DESTINATION lib/appdpkg-status
+        FILES_MATCHING PATTERN "*.so*")
+
+# Ensure platforms directory is installed with all platform plugins
+install(DIRECTORY ${CMAKE_BINARY_DIR}/plugins/platforms/
         DESTINATION lib/appdpkg-status/platforms
         FILES_MATCHING PATTERN "*.so*")
+
+# Install the script as postinst for automatic execution during installation
+install(FILES ${CMAKE_SOURCE_DIR}/set-target-env-vars.sh
+        DESTINATION DEBIAN
+        RENAME postinst
+        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ)
+
+# Install the script for manual use by the user
+install(FILES ${CMAKE_SOURCE_DIR}/set-target-env-vars.sh
+        DESTINATION share/appdpkg-status
+        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ)
+
+# Set the postinst script to be executable
+set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/postinst")
+
+install(DIRECTORY ${CMAKE_BINARY_DIR}/qml/
+        DESTINATION share/appdpkg-status/qml)
 
 # Update linuxdeployqt to bundle plugins explicitly
 add_custom_command(
@@ -85,7 +133,7 @@ add_custom_command(
     OUTPUT linuxdeployqt_bundle
     COMMAND linuxdeployqt ${CMAKE_BINARY_DIR}/appdpkg-status
             -qmldir=${CMAKE_SOURCE_DIR}/qml
-            -qmake=/opt/Qt/6.7.2/gcc_64/bin/qmake
+            -qmake=${QT_QMAKE_PATH}
             -bundle-non-qt-libs
             -extra-plugins=platforms
     DEPENDS appdpkg-status
@@ -93,10 +141,23 @@ add_custom_command(
     COMMENT "Finished running linuxdeployqt to bundle Qt dependencies for .deb"
 )
 
+# Ensure the shell script is copied to the build directory
+add_custom_command(
+    OUTPUT ${CMAKE_BINARY_DIR}/set-target-env-vars.sh
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/set-target-env-vars.sh ${CMAKE_BINARY_DIR}/set-target-env-vars.sh
+    COMMENT "Copying shell script to the build directory for packaging"
+)
+
+# Add a target to ensure the shell script is copied during the build process
+add_custom_target(copy_shell_script
+    DEPENDS ${CMAKE_BINARY_DIR}/set-target-env-vars.sh
+)
+
 # Update RPATH and include CPack for packaging
 add_custom_target(package_with_cpack
     DEPENDS linuxdeployqt_bundle
-    COMMAND patchelf --set-rpath "/usr/lib/appdpkg-status:/usr/lib/appdpkg-status/platforms:/opt/Qt/6.7.2/gcc_64/lib:" ${CMAKE_BINARY_DIR}/appdpkg-status
+    #COMMAND patchelf --set-rpath "/usr/lib/appdpkg-status:/usr/lib/appdpkg-status/platforms/opt/Qt/6.7.2/gcc_64/lib:" ${CMAKE_BINARY_DIR}/appdpkg-status
+    COMMAND patchelf --set-rpath "/opt/Qt/6.7.2/gcc_64/lib:" ${CMAKE_BINARY_DIR}/appdpkg-status
     COMMAND ${CMAKE_COMMAND} -E echo "RPATH set to:"
     COMMAND patchelf --print-rpath ${CMAKE_BINARY_DIR}/appdpkg-status
     COMMAND ${CMAKE_COMMAND} -E echo "Starting CPack... ${CMAKE_INSTALL_RPATH}"
