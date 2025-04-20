@@ -24,6 +24,7 @@ if [[ "$choice" == "y" || "$choice" == "Y" ]]; then
         echo "export LD_LIBRARY_PATH=\"$APP_INSTALL_DIR:\$APP_INSTALL_DIR/platforms:\$LD_LIBRARY_PATH\"" >> ~/.bashrc
         echo "export QML2_IMPORT_PATH=\"$APP_INSTALL_DIR/qml:\$QML2_IMPORT_PATH\"" >> ~/.bashrc
         echo "export QT_PLUGIN_PATH=\"$APP_INSTALL_DIR/platforms:\$QT_PLUGIN_PATH\"" >> ~/.bashrc
+        echo "export QT_QUICK_BACKEND=\"software\"" >> ~/.bashrc
         echo "Environment variables have been added to ~/.bashrc."
         echo "Please restart your terminal or run 'source ~/.bashrc' to apply the changes."
     else
