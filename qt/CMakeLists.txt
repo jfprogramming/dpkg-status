@@ -70,9 +70,12 @@ set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Jesse Finneamn <jfprogramming@yahoo.com>")
 set(CPACK_PACKAGE_HOMEPAGE_URL "https://example.com")
 set(CPACK_PACKAGE_LICENSE "MIT")
 set(CPACK_GENERATOR "DEB")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6core6, libqt6gui6, libqt6qml6, python3, binutils,
-                                  qml-module-qtquick2, qml-module-qtquick-controls2,
-                                  qml-module-qtquick-layouts")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6core6, libqt6gui6, libqt6qml6, python3,
+                                  libwayland-client0, libwayland-cursor0, libwayland-egl1,
+                                  libxcb-cursor0, libxcb1, libx11-xcb1, libxcb-util1,
+                                  libxcb-xkb1, libxkbcommon0, libxkbcommon-x11-0,
+                                  libxcb-cursor-dev, binutils, libglx-mesa0, libopengl-dev,
+                                  qml-module-qtquick2, qml-module-qtquick-controls2, qml-module-qtquick-layouts")
 set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
 include(CPack)
 
