@@ -6,7 +6,8 @@ APP_INSTALL_DIR="/usr/lib/appdpkg-status"
 # Set target environment variables
 export QML2_IMPORT_PATH="/usr/share/appdpkg-status/qml/"
 export LD_LIBRARY_PATH="/usr/lib/appdpkg-status/"
-export QT_PLUGIN_PATH="/usr/lib/appdpkg-status/platforms/"
+export QT_PLUGIN_PATH="/usr/lib/appdpkg-status/"
+export QT_QUICK_BACKEND=software
 
 # Print environment variables for verification
 echo "Environment variables set for this session:"
