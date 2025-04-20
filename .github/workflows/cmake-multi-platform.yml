@@ -25,37 +25,30 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Cache Qt6 installation
-      id: cache-qt
-      uses: actions/cache@v3
-      with:
-        path: /usr/lib/qt6 # Path where Qt6 is installed
-        key: qt6-cache-${{ runner.os }}-${{ matrix.build_type }}
-
-    - name: Install Qt6 (if not cached)
-      if: steps.cache-qt.outputs.cache-hit != 'true'
+    - name: Install Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-declarative-dev
+        sudo apt-get install -y qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-declarative-dev cmake gcc g++ clang
 
-    - name: Set reusable strings
-      id: strings
-      shell: bash
+    - name: Debug Qt6 Installation
       run: |
-        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+        echo "Qt6 Version:"
+        qmake --version
+        echo "Qt6 Installation Path:"
+        ls -R /usr/lib/qt6
 
     - name: Configure CMake
       run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        cmake -B build
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DCMAKE_PREFIX_PATH=/usr/lib/qt6
-        -S ${{ github.workspace }}/qt
+        -S .
 
     - name: Build
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+      run: cmake --build build --config ${{ matrix.build_type }}
 
     - name: Test
-      working-directory: ${{ steps.strings.outputs.build-output-dir }}
+      working-directory: build
       run: ctest --build-config ${{ matrix.build_type }}
