@@ -12,7 +12,7 @@
 3. [Features](#features)
 4. [Prerequisites](#prerequisites)
 5. [System Requirements](#system-requirements)
-6. [Project Configuration & Development Environment Setup](#Project-Configuration-&-Development-Environment-Setup)
+6. [Project Configuration & Development Environment Setup](#project-configuration--development-environment-setup)
 7. [Setting up a Target Debian 12 VM for Testing](#setting-up-a-target-debian-12-vm-for-testing)
 8. [Detection Algorithm](#detection-algorithm)
 9. [Notes on Key Files](#notes-on-key-files)
@@ -20,7 +20,7 @@
 11. [GitHub Actions](#github-actions)
 12. [Releases](#releases)
 13. [Troubleshooting](#troubleshooting)
-14. [License](#License)
+14. [License](#license)
 
 ## **1. Introduction**
 
