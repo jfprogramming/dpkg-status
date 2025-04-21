@@ -107,19 +107,19 @@ install(DIRECTORY ${CMAKE_BINARY_DIR}/plugins/platforms/
         DESTINATION lib/appdpkg-status/platforms
         FILES_MATCHING PATTERN "*.so*")
 
-# Install the script as postinst for automatic execution during installation
-install(FILES ${CMAKE_SOURCE_DIR}/set-target-env-vars.sh
-        DESTINATION DEBIAN
-        RENAME postinst
-        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ)
-
 # Install the script for manual use by the user
 install(FILES ${CMAKE_SOURCE_DIR}/set-target-env-vars.sh
         DESTINATION share/appdpkg-status
         PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ)
 
-# Set the postinst script to be executable
-set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/postinst")
+# Install the script as postinst for automatic execution during installation
+install(FILES ${CMAKE_SOURCE_DIR}/set-target-env-vars.sh
+        DESTINATION ${CMAKE_BINARY_DIR}/DEBIAN
+        RENAME postinst
+        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ)
+
+# Set the postinst script in the DEBIAN control directory
+set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_BINARY_DIR}/DEBIAN/postinst")
 
 install(DIRECTORY ${CMAKE_BINARY_DIR}/qml/
         DESTINATION share/appdpkg-status/qml)

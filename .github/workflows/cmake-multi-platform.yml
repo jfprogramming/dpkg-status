@@ -25,30 +25,45 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install Dependencies
+    - name: Install compilers
       run: |
         sudo apt-get update
-        sudo apt-get install -y qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-declarative-dev cmake gcc g++ clang
+        sudo apt-get install -y gcc g++ clang
 
-    - name: Debug Qt6 Installation
+    - name: Cache Qt6 installation
+      id: cache-qt
+      uses: actions/cache@v3
+      with:
+        path: /usr/lib/qt6 # Adjust this if the Qt6 path differs
+        key: qt6-cache-${{ runner.os }}-${{ matrix.build_type }}
+
+    - name: Install Qt6 (if not cached)
+      if: steps.cache-qt.outputs.cache-hit != 'true'
       run: |
-        echo "Qt6 Version:"
-        qmake --version
-        echo "Qt6 Installation Path:"
-        ls -R /usr/lib/qt6
+        sudo add-apt-repository -y ppa:qt6/maintainers
+        sudo apt-get update
+        sudo apt-get install -y qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-declarative-dev patchelf
+
+    - name: Set reusable strings
+      id: strings
+      shell: bash
+      run: |
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
     - name: Configure CMake
       run: >
-        cmake -B build
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -DCMAKE_PREFIX_PATH=/usr/lib/qt6
-        -S .
+        -S ${{ github.workspace }}
 
     - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }}
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
     - name: Test
-      working-directory: build
-      run: ctest --build-config ${{ matrix.build_type }}
+      working-directory: ${{ steps.strings.outputs.build-output-dir }}
+      run: ctest -C ${{ matrix.build_type }}
+
+    - name: Cleanup
+      run: sudo rm -rf ${{ steps.strings.outputs.build-output-dir }}
