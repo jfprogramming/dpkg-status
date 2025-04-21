@@ -30,41 +30,29 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y gcc g++ clang
 
-    - name: Cache Qt6 installation
-      id: cache-qt
-      uses: actions/cache@v3
-      with:
-        path: /usr/lib/x86_64-linux-gnu/cmake/Qt6
-        key: qt6-cache-${{ runner.os }}-${{ matrix.build_type }}
-
-    - name: Install Qt6 (if not cached)
-      if: steps.cache-qt.outputs.cache-hit != 'true'
+    - name: Install Qt6
       run: |
         sudo apt-get update
         sudo apt-get install -y qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-declarative-dev qt6-wayland patchelf
 
-    - name: Debug Qt6 Modules
-      run: ls -la /usr/lib/x86_64-linux-gnu/cmake/Qt6
-
-    - name: Set reusable strings
-      id: strings
-      shell: bash
+    - name: Debug Qt6 Installation
       run: |
-        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+        ls -la /usr/lib/x86_64-linux-gnu/cmake/Qt6
+        ls -la /usr/lib/x86_64-linux-gnu/qt6
 
     - name: Configure CMake
       run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
-        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        cmake -B /home/runner/work/dpkg-status/dpkg-status/build
+        -DCMAKE_CXX_COMPILER=g++
+        -DCMAKE_C_COMPILER=gcc
+        -DCMAKE_BUILD_TYPE=Release
         -DQt6_DIR=/usr/lib/x86_64-linux-gnu/cmake/Qt6
         -DCMAKE_PREFIX_PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt6
-        -S ${{ github.workspace }}/qt
+        -S /home/runner/work/dpkg-status/dpkg-status/qt
 
     - name: Build
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+      run: cmake --build /home/runner/work/dpkg-status/dpkg-status/build --config Release
 
     - name: Test
-      working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: ctest -C ${{ matrix.build_type }}
+      working-directory: /home/runner/work/dpkg-status/dpkg-status/build
+      run: ctest -C Release
