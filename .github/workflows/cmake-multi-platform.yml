@@ -46,6 +46,11 @@ jobs:
     - name: Locate Qt6Config.cmake
       run: find /usr -name "Qt6Config.cmake"
 
+    - name: Debug CMake Variables
+      run: |
+       echo "CMAKE_PREFIX_PATH: /usr/lib/x86_64-linux-gnu/cmake/Qt6"
+       echo "Qt6_DIR: /usr/lib/x86_64-linux-gnu/cmake/Qt6"
+
     - name: Set reusable strings
       id: strings
       shell: bash
