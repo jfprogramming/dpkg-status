@@ -1,12 +1,14 @@
 # **dpkg-status**
 
-`dpkg-status` is a Python3 script for parsing and analyzing the `/var/lib/dpkg/status` file on Debian-based systems. The script identifies packages explicitly installed by the user, excluding dependencies and auto-installed packages.
+`dpkg-status`  is a Python3 script for parsing and analyzing the `/var/lib/dpkg/status` file on Debian-based systems. 
+  - The script identifies packages explicitly installed by the user, excluding dependencies. 
+  - Below are the current details of the project.
 
 ---
 
 ## **Table of Contents**
-
-1. [Installation](#installation)
+1. [Introduction](#introduction)
+2. [Installation](#installation)
 2. [Features](#features)
 3. [Prerequisites](#prerequisites)
 4. [System Requirements](#system-requirements)
@@ -17,9 +19,20 @@
 9. [Releases](#releases)
 10. [Troubleshooting](#troubleshooting)
 
+## **1. Introduction**
+
+This repository contains:
+- A Python3 script for managing `dpkg status` files.
+- A Qt-based application for rendering and managing dependencies.
+- Supporting scripts for environment setup and packaging.
+
+The project is designed to simplify dependency management and application packaging for Debian-based systems.
+
 ---
 
-## **1. Installation**
+---
+
+## **2. Installation**
 
 ### **Option 1: Install `.deb` Package via GitHub Release**
 
@@ -67,6 +80,9 @@
      ```bash
      cd releases/
      sudo dpkg -i dpkg-status-1.0.0-Linux.deb
+     ```
+   - If deb fails to install due to dependencies, use apt to fix installation
+     ```bash
      # use to install missing qt dependencies
      sudo apt-get install -f
      ```
@@ -88,15 +104,15 @@
      /usr/share/appdpkg-status/dpkg_status.py
 ---
 
-## **2. Features**
+## **3. Features**
 
 - Parses `/var/lib/dpkg/status` to list explicitly installed packages.
 - Leverages `/var/lib/apt/extended_states` for analyzing auto-installed packages.
-- Integrates with `apt-mark showmanual` for script accuracy.
+- Integrates with `apt-mark showmanual` for script report verification.
 
 ---
 
-## **3. Prerequisites**
+## **4. Prerequisites**
 
 To successfully run the script, ensure the following prerequisites are met:
 
@@ -106,7 +122,30 @@ To successfully run the script, ensure the following prerequisites are met:
    - `/var/lib/dpkg/status`
    - `/var/lib/apt/extended_states`
 4. **Permissions**: Read access to `/var/lib/dpkg/status` and `/var/lib/apt/extended_states`.
-5. **Package Dependencies**: `libqt6core6`, `libqt6gui6`, and `libqt6qml6`
+
+5. **CMAKE Defined Package Dependencies**: 
+    - `libqt6core6`, `libqt6gui6`, `libqt6qml6`, `python3`,
+      `libwayland-client0`, `libwayland-cursor0`, `libwayland-egl1`,
+      `libxcb-cursor0`, `libxcb1`, `libx11-xcb1`, `libxcb-util1`,
+      `libxcb-xkb1, libxkbcommon0`, `libxkbcommon-x11-0`,
+      `libxcb-cursor-dev`, `binutils`, `libglx-mesa0`, `libopengl-dev`,
+      `qml-module-qtquick2`, `qml-module-qtquick-controls2`, `qml-module-qtquick-layouts`.
+
+6. **The following dependencies are automatically installed using `sudo apt-get -f install`**:
+    - `binutils`, `binutils-common`, `binutils-x86-64-linux-gnu`, `libb2-1`,
+      `libbinutils`, `libctf-nobfd0`, `libctf0`, `libdouble-conversion3`,
+      `libgprofng0`, `libmd4c0`, `libpcre2-16-0`, `libpthread-stubs0-dev`,
+      `libqt5core5a`, `libqt5dbus5`, `libqt5gui5`, `libqt5network5`,
+      `libqt5qml5`, `libqt5qmlmodels5`, `libqt5qmlworkerscript5`, `libqt5quick5`,
+      `libqt5quickcontrols2-5` ,`libqt5quicktemplates2-5` ,`libqt5svg5`, `libqt5waylandclient5`,
+      `libqt5waylandcompositor5` ,`libqt5widgets5`, `libqt6core6`, `libqt6dbus6`,
+      `libqt6gui6`, `libqt6network6`, `libqt6qml6`, `libts0`,
+      `libxau-dev`, `libxcb-cursor-dev`, `libxcb-cursor0`, `libxcb-image0-dev`,
+      `libxcb-render-util0-dev` ,`libxcb-render0-dev`  ,`libxcb-shm0-dev`, `libxcb-xinerama0`,
+      `libxcb-xinput0`, `libxcb1-dev`, `libxdmcp-dev`, `qml-module-qtquick-controls2`,
+      `qml-module-qtquick-layouts` ,`qml-module-qtquick-templates2` ,`qml-module-qtquick2`,
+      `qt5-gtk-platformtheme`, `qt6-gtk-platformtheme` ,`qt6-qpa-plugins`, `qt6-translations-l10n` ,
+      `qttranslations5-l10n`, `qtwayland5`, `x11proto-dev`, `xorg-sgml-doctools`.
 
 ---
 
@@ -115,32 +154,48 @@ To successfully run the script, ensure the following prerequisites are met:
 - **Memory**: Minimum 512 MB of RAM.
 - **Disk Space**: Minimal (only requires access to `/var/lib/dpkg/` and `/var/lib/apt/`).
 - **Linux Distribution**: Compatible with all Debian-based distributions.
-- **Commands**: python3.10, pip, wget and git command line utilities 
+- **Commands**: python3.10, pip, apt, dpkg, wget and git command line utilities 
 
 ---
 
-## **5. Project Configuration**
+## **5. Project Configuration & Development Environment Setup**
 
 Follow these steps to set up the project for development:
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/jfprogramming/dpkg-status.git
-   cd dpkg-status
-   ```
+1. Install Qt 6.7 or newer in `/opt/Qt`:
+    - Download the installer from the Qt website and follow the installation instructions.
+
+2. Set up a project directory
+    - ```bash 
+      mkdir ~/Projects/
+      ```
+3. Clone the repository:
+   - ```bash
+     git clone https://github.com/jfprogramming/dpkg-status.git
+     cd dpkg-status
+     ```
    
 2. Project directory structure:
    ```plaintext
    dpkg-status/
    ├── qt/
    │   ├── build
+   │   │   ├── lib
+   │   │   ├── plugins 
+   │   │   ├── qml
    │   ├── qml
+   │   │   ├── Main.qml
+   │   ├── CMakelist.txt
    │   ├── main.cpp
+   │   ├── dpkgmodeldata.cpp
+   │   ├── dpkgmodeldata.h
    │   ├── dpkg_status.py
-   │   ├── install
-   │   ├── compat
-   ├── src/
-   │   ├── dpkg_status.py
+   │   ├── set-target-env-vars.sh
+   │   ├── find_libs.sh
+   │   ├── icon.png 
+   │   ├── defualt.desktop
+   │   ├── README.md
+   │   ├── vm_settings.png
    ├── tests/
    │   ├── test_dpkg_status.py
    ├── releases/
