@@ -238,7 +238,7 @@ Follow these steps to set up the project for development:
     - To build the project and create a Debian package, add additional build parameters:
       - `-v --target custom_package -j4` 
     - Run Environment configuration 
-      - set `LD_LIBRARY_PATH` to your qt installation directory
+      - set `LD_LIBRARY_PATH` to Qt's installation directory
         -  Ex. `LD_LIBRARY_PATH=/opt/Qt/6.7.2/gcc_64/lib/`
 
 ---
@@ -257,18 +257,18 @@ Follow these steps to set up the project for development:
          ```
        - Install Directories
          - `/usr/bin/appdpkg-status`:
-           - This is where the main executable binary (or launcher script) for your Qt application resides. 
+           - This is where the main executable binary (or launcher script) for Qt application resides. 
            - The file *appdpkg-status* is typically the entry point for users to run the application directly from the terminal or desktop environment. 
            - When a user runs the command appdpkg-status, it executes this binary or script. 
          - `/usr/share/appdpkg-status/`:
-           - This directory is used to store shared resources and data files for your application.
+           - This directory is used to store shared resources and data files for the application.
            - Python scripts (dpkg_status.py or other backend scripts) for processing.
            - QML files for the Qt GUI (e.g., UI components and layouts).
            - Static assets like icons, images, or translations are used by the application.
            - It ensures that the application’s data files are accessible system-wide without being tied to a specific user.
          - `/usr/lib/appdpkg-status/:`
            - This directory is typically used for application-specific libraries or modules.
-           - Shared libraries required by your application, such as compiled `.so` files.
+           - Shared libraries required by the application, such as compiled `.so` files.
            - Dependency files specific to the application's runtime.
            - These libraries are used internally by the application to ensure that all required dependencies are available without conflicting with the system's global libraries.
          - *How the Directories Work Together*
@@ -375,9 +375,9 @@ This section explains how the project's `CMakeLists.txt` file, project structure
 #### **What is LinuxDeployQt?**
 LinuxDeployQt is a tool for bundling Qt applications with their dependencies. It ensures the application is portable and includes all necessary Qt libraries and plugins to run on a target system.
 
-#### **How It Works in Your Project**
+#### **How It Works**
 1. **Qt Application Binary**:
-   - Your Qt application binary (`appdpkg-status`) is built and located in the `/usr/bin/` directory.
+   - The Qt application binary (`appdpkg-status`) is built and located in the `/usr/bin/` directory.
    - LinuxDeployQt scans the binary to identify its dependencies, such as Qt modules and libraries.
 
 2. **QML Directory**:
@@ -400,9 +400,9 @@ LinuxDeployQt is a tool for bundling Qt applications with their dependencies. It
   - *CPack* is a tool integrated with CMake that automates the creation of software packages. 
   - It supports multiple formats, including `.deb` packages for Debian-based Linux distributions.
 
-#### **How CPack Works in Your Project**
+#### **How CPack Workst**
 1. **Configuration in `CMakeLists.txt`**:
-   - Your `CMakeLists.txt` file includes specific configurations for CPack. Below are some key configurations:
+   - The `CMakeLists.txt` file includes specific configurations for CPack. Below are some key configurations:
      ```cmake
      set(CPACK_PACKAGE_NAME "dpkg-status")
      set(CPACK_PACKAGE_VERSION "1.0.0")
@@ -422,7 +422,7 @@ LinuxDeployQt is a tool for bundling Qt applications with their dependencies. It
      - **Maintainer and License**: Adds metadata for the package.
 
 2. **Installation Directories**:
-   - The `install` commands in your `CMakeLists.txt` specify where files are placed in the package:
+   - The `install` commands in the `CMakeLists.txt` specify where files are placed in the package:
      ```cmake
      install(TARGETS appdpkg-status DESTINATION bin)
      install(DIRECTORY ${CMAKE_SOURCE_DIR}/qml DESTINATION share/appdpkg-status)
@@ -443,7 +443,7 @@ LinuxDeployQt is a tool for bundling Qt applications with their dependencies. It
 ### **How the Components Work Together**
 
 1. **Project Structure**:
-   - Your project is organized to separate binaries, resources, and libraries into standard directories:
+   - This project is organized to separate binaries, resources, and libraries into standard directories:
      ```
      /usr/bin/appdpkg-status          # Main executable binary
      /usr/share/appdpkg-status/       # QML files and Python scripts
@@ -467,7 +467,7 @@ LinuxDeployQt is a tool for bundling Qt applications with their dependencies. It
   - Even if the libraries are not installed in standard system paths.
 
 #### Configuring RPATH in `CMakeLists.txt`
-  - Below are the configurations to enable and use RPATH in your `CMakeLists.txt` file:
+  - Below are the configurations to enable and use RPATH in the `CMakeLists.txt` file:
   - ```cmake
     set(CMAKE_SKIP_BUILD_RPATH FALSE)
     set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
