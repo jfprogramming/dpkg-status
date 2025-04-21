@@ -43,8 +43,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-declarative-dev qt6-wayland patchelf
 
-    - name: Debug Qt installation
-      run: find /usr/lib -name "Qt6Config.cmake"
+    - name: Debug Qt6 Modules
+      run: ls -la /usr/lib/x86_64-linux-gnu/cmake/Qt6
 
     - name: Set reusable strings
       id: strings
@@ -59,6 +59,7 @@ jobs:
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DQt6_DIR=/usr/lib/x86_64-linux-gnu/cmake/Qt6
+        -DCMAKE_PREFIX_PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt6
         -S ${{ github.workspace }}/qt
 
     - name: Build
