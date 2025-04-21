@@ -12,14 +12,15 @@
 3. [Features](#features)
 4. [Prerequisites](#prerequisites)
 5. [System Requirements](#system-requirements)
-6. [Project Configuration](#project-configuration)
-7. [Development Environment Setup](#development-environment-setup)
+6. [Project Configuration & Development Environment Setup](#Project-Configuration-&-Development-Environment-Setup)
+7. [Setting up a Target Debian 12 VM for Testing](#setting-up-a-target-debian-12-vm-for-testing)
 8. [Detection Algorithm](#detection-algorithm)
 9. [Notes on Key Files](#notes-on-key-files)
 10. [Qt Application: `appdpkg-status`](#qt-application-appdpkg-status)
 11. [GitHub Actions](#github-actions)
 12. [Releases](#releases)
 13. [Troubleshooting](#troubleshooting)
+14. [License](#License)
 
 ## **1. Introduction**
 
@@ -524,13 +525,13 @@ To package the `appdpkg-status` binary with its required Qt libraries and depend
      
 ---
 
-## **9. GitHub Actions**
+## **11. GitHub Actions**
   - The project uses *GitHub Actions* for Continuous Integration (CI) and Continuous Deployment (CD). 
   - The CI/CD pipeline builds the project, runs tests, and packages the application.
 
 --- 
 
-## **11. Releases**
+## **12. Releases**
 
 ### **Creating a `.deb` Package**:
 1. Releases are created and tested local
@@ -542,7 +543,7 @@ To package the `appdpkg-status` binary with its required Qt libraries and depend
 
 ---
 
-## **12. Troubleshooting**
+## **13. Troubleshooting**
 
 ### **General Issues & Debugging**:
 - **Missing Dependencies**:
@@ -576,40 +577,40 @@ To package the `appdpkg-status` binary with its required Qt libraries and depend
      ```
 ---
 
-## **License**
-
-This project is licensed under the **MIT License**.
+## **14. License**
+  - This project is licensed under the **MIT License**.
 
 ### **Key Permissions and Conditions:**
-- **Permissions**:
-  - Commercial use
-  - Modification
-  - Distribution
-  - Private use
-- **Conditions**:
-  - You must include the original copyright and license notice in any copy of the software.
+  - **Permissions**:
+    - Commercial use
+    - Modification
+    - Distribution
+    - Private use
+  - **Conditions**:
+    - You must include the original copyright and license notice in any copy of the software.
 
-A full copy of the license is included in the repository. See the [LICENSE](./LICENSE) file for more details.
+  - A full copy of the license is included in the repository. See the [LICENSE](./LICENSE) file for more details.
 
-```plaintext
-MIT License
+  - ```plaintext
+    MIT License
 
-Copyright (c) 2025 jfprogramming
+    Copyright (c) 2025 jfprogramming
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+    ```
