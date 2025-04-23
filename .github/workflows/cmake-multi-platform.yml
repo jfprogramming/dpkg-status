@@ -58,14 +58,15 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
     - name: Configure CMake
+      env:
+        CMAKE_PREFIX_PATH: /usr/lib/x86_64-linux-gnu/cmake/Qt6
+        Qt6_DIR: /usr/lib/x86_64-linux-gnu/cmake/Qt6
       run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
-        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -DQt6_DIR=/usr/lib/x86_64-linux-gnu/cmake/Qt6
-        -DCMAKE_PREFIX_PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt6
-        -S ${{ github.workspace }}/qt
+       cmake -B ${{ steps.strings.outputs.build-output-dir }}
+       -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+       -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+       -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+       -S ${{ github.workspace }}/qt
 
     - name: Build
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
