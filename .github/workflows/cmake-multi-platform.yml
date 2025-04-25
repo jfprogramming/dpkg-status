@@ -39,7 +39,7 @@ jobs:
 
     - name: Debug Cache
       run: |
-        if [[ ${{ steps.cache-qt.outputs.cache-hit }} == 'true' ]]; then
+        if [[ "${{ steps.cache-qt.outputs.cache-hit }}" = "true" ]]; then
           echo "Cache hit for Qt6 installation."
         else
           echo "Cache miss. Installing Qt6."
