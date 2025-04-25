@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  workflow_dispatch: # This enables the manual "Run workflow" button
+  workflow_dispatch:
 
 jobs:
   build:
@@ -25,18 +25,50 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Install compilers
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc g++ clang
+
     - name: Cache Qt6 installation
       id: cache-qt
       uses: actions/cache@v3
       with:
-        path: /usr/lib/qt6 # Path where Qt6 is installed
+        path: /usr/lib/x86_64-linux-gnu/cmake/Qt6
         key: qt6-cache-${{ runner.os }}-${{ matrix.build_type }}
+
+    - name: Debug Cache
+      run: |
+        if [[ "${{ steps.cache-qt.outputs.cache-hit }}" = "true" ]]; then
+          echo "Cache hit for Qt6 installation."
+        else
+          echo "Cache miss. Installing Qt6."
+        fi
 
     - name: Install Qt6 (if not cached)
       if: steps.cache-qt.outputs.cache-hit != 'true'
       run: |
         sudo apt-get update
-        sudo apt-get install -y qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-declarative-dev patchelf
+        sudo apt-get install -y qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-declarative-dev qt6-wayland patchelf
+
+    - name: Locate Qt6Config.cmake
+      run: find /usr -name "Qt6Config.cmake"
+
+
+    - name: Debug CMake Variables
+      env:
+        CMAKE_PREFIX_PATH: /usr/lib/x86_64-linux-gnu/cmake/Qt6
+        Qt6_DIR: /usr/lib/x86_64-linux-gnu/cmake/Qt6
+      run: |
+        echo "CMAKE_PREFIX_PATH: $CMAKE_PREFIX_PATH"
+        echo "Qt6_DIR: $Qt6_DIR"
+
+    - name: Verify Qt6 Installation
+      run: |
+        if [ ! -f /usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake ]; then
+          echo "Qt6Config.cmake not found. Ensure that Qt6 is installed correctly."
+          exit 1
+        fi
 
     - name: Set reusable strings
       id: strings
@@ -45,16 +77,25 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
     - name: Configure CMake
-      run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
-        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -S ${{ github.workspace }}/qt
+      env:
+        CMAKE_PREFIX_PATH: /usr/lib/x86_64-linux-gnu/cmake/Qt6
+        Qt6_DIR: /usr/lib/x86_64-linux-gnu/cmake/Qt6
+      run: |
+        echo "CMAKE_PREFIX_PATH: $CMAKE_PREFIX_PATH"
+        echo "Qt6_DIR: $Qt6_DIR"
+        cmake -B ${{ steps.strings.outputs.build-output-dir }} \
+          -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} \
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} \
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DCMAKE_PREFIX_PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt6 \
+          -DQt6_DIR=/usr/lib/x86_64-linux-gnu/cmake/Qt6 \
+          -S ${{ github.workspace }}/qt
 
     - name: Build
+      if: success()
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
     - name: Test
+      if: success()
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: ctest --build-config ${{ matrix.build_type }}
+      run: ctest -C ${{ matrix.build_type }}
