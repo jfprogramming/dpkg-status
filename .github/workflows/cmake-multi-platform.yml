@@ -48,8 +48,8 @@ jobs:
 
     - name: Debug CMake Variables
       run: |
-       echo "$CMAKE_PREFIX_PATH"
-       echo "$Qt6_DIR"
+       echo "CMAKE_PREFIX_PATH: $CMAKE_PREFIX_PATH"
+       echo "Qt6_DIR: $Qt6_DIR"
 
     - name: Verify Qt6 Installation
       run: |
@@ -68,9 +68,9 @@ jobs:
       env:
         CMAKE_PREFIX_PATH: /usr/lib/x86_64-linux-gnu/cmake/Qt6
         Qt6_DIR: /usr/lib/x86_64-linux-gnu/cmake/Qt6
-        echo "CMAKE_PREFIX_PATH: $CMAKE_PREFIX_PATH"
-        echo "Qt6_DIR: $Qt6_DIR"
       run: >
+       echo "CMAKE_PREFIX_PATH: $CMAKE_PREFIX_PATH"
+       echo "Qt6_DIR: $Qt6_DIR"
        cmake -B ${{ steps.strings.outputs.build-output-dir }}
        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
