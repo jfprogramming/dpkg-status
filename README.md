@@ -26,7 +26,7 @@
 
 This repository contains:
 - A Python3 script for managing `dpkg status` files.
-- A Qt-based application for display results of the `dpkg_status.py` script.
+- A Qt-based application for displaying results of the `dpkg_status.py` script.
 - Supporting scripts for environment setup and installation.
 
 The project is designed to report packages installed on Debian-based systems.
