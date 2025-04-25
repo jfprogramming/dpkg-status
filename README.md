@@ -29,7 +29,7 @@ This repository contains:
 - A Qt-based application for display results of the `dpkg_status.py` script.
 - Supporting scripts for environment setup and installation.
 
-The project is designed to simplify dependency management and application packaging for Debian-based systems.
+The project is designed to report packages installed on Debian-based systems.
 
 ---
 
