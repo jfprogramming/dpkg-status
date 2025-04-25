@@ -54,7 +54,11 @@ jobs:
     - name: Locate Qt6Config.cmake
       run: find /usr -name "Qt6Config.cmake"
 
+
     - name: Debug CMake Variables
+      env:
+        CMAKE_PREFIX_PATH: /usr/lib/x86_64-linux-gnu/cmake/Qt6
+        Qt6_DIR: /usr/lib/x86_64-linux-gnu/cmake/Qt6
       run: |
         echo "CMAKE_PREFIX_PATH: $CMAKE_PREFIX_PATH"
         echo "Qt6_DIR: $Qt6_DIR"
